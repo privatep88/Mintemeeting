@@ -1,0 +1,448 @@
+{
+  "entities": {
+    "Minute": {
+      "title": "Meeting Minute",
+      "description": "Official institutional meeting minute record",
+      "type": "object",
+      "properties": {
+        "minuteNumber": {
+          "type": "number",
+          "description": "Sequential meeting number within the year"
+        },
+        "year": {
+          "type": "number",
+          "description": "Year of the meeting"
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Meeting location"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Meeting date YYYY-MM-DD"
+        },
+        "time": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Meeting time HH:mm"
+        },
+        "mainSubject": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional main subject of the meeting"
+        },
+        "secretaryName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Meeting secretary name"
+        },
+        "secretarySignature": {
+          "type": "string",
+          "maxLength": 150000,
+          "description": "Electronic signature data or text for secretary"
+        },
+        "chairmanName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Meeting chairman name"
+        },
+        "chairmanSignature": {
+          "type": "string",
+          "maxLength": 150000,
+          "description": "Electronic signature data or text for chairman"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "saved", "archived"],
+          "description": "Minute workflow status"
+        },
+        "participantsCount": {
+          "type": "number",
+          "description": "Cached count of participants"
+        },
+        "searchText": {
+          "type": "string",
+          "maxLength": 15000,
+          "description": "Indexed searchable text of participants, topics, and recommendations"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Creator UID"
+        },
+        "createdByName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Creator display name or email"
+        },
+        "updatedByName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Last editor display name or email"
+        },
+        "archivedAt": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "ISO timestamp when archived"
+        },
+        "archivedByName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "User who archived the minute"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": [
+        "minuteNumber",
+        "year",
+        "location",
+        "date",
+        "time",
+        "mainSubject",
+        "secretaryName",
+        "secretarySignature",
+        "chairmanName",
+        "chairmanSignature",
+        "status",
+        "participantsCount",
+        "searchText",
+        "ownerId",
+        "createdByName",
+        "updatedByName",
+        "archivedAt",
+        "archivedByName",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MinuteYearLock": {
+      "title": "Minute Year Number Uniqueness Lock",
+      "description": "Enforces database-level uniqueness of minuteNumber within the same year",
+      "type": "object",
+      "properties": {
+        "minuteId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "year": {
+          "type": "number"
+        },
+        "minuteNumber": {
+          "type": "number"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["minuteId", "year", "minuteNumber", "ownerId", "createdAt"]
+    },
+    "Participant": {
+      "title": "Meeting Participant",
+      "description": "Participant attendance record inside a minute",
+      "type": "object",
+      "properties": {
+        "minuteId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "orderIndex": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "jobTitle": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "attendanceStatus": {
+          "type": "string",
+          "enum": ["present", "absent", "excused"]
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "minuteId",
+        "orderIndex",
+        "name",
+        "jobTitle",
+        "attendanceStatus",
+        "notes",
+        "ownerId",
+        "updatedAt"
+      ]
+    },
+    "OutcomeItem": {
+      "title": "Meeting Input and Outcome Item",
+      "description": "Detailed meeting input/outcome row with recommendations",
+      "type": "object",
+      "properties": {
+        "minuteId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "orderIndex": {
+          "type": "number"
+        },
+        "subject": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "recommendations": {
+          "type": "string",
+          "maxLength": 8000
+        },
+        "responsiblePerson": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "executionDate": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "minuteId",
+        "orderIndex",
+        "subject",
+        "recommendations",
+        "responsiblePerson",
+        "executionDate",
+        "ownerId",
+        "updatedAt"
+      ]
+    },
+    "OngoingTopic": {
+      "title": "Ongoing Topic",
+      "description": "Continuing topic carried over or tracked across meetings",
+      "type": "object",
+      "properties": {
+        "minuteId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "orderIndex": {
+          "type": "number"
+        },
+        "itemNumber": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "subject": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "latestUpdates": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "recommendationOrAction": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "followUpPerson": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "followUpDate": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "topicStatus": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "sourceMinuteId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "sourceMinuteLabel": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "historyLog": {
+          "type": "string",
+          "maxLength": 8000
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "minuteId",
+        "orderIndex",
+        "itemNumber",
+        "subject",
+        "latestUpdates",
+        "recommendationOrAction",
+        "followUpPerson",
+        "followUpDate",
+        "topicStatus",
+        "sourceMinuteId",
+        "sourceMinuteLabel",
+        "historyLog",
+        "ownerId",
+        "updatedAt"
+      ]
+    },
+    "NewTopic": {
+      "title": "New Topic",
+      "description": "Newly raised topic in the meeting",
+      "type": "object",
+      "properties": {
+        "minuteId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "orderIndex": {
+          "type": "number"
+        },
+        "itemNumber": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "subject": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "discussionSummary": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "recommendationsAndDecisions": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "responsiblePerson": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "executionDate": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "minuteId",
+        "orderIndex",
+        "itemNumber",
+        "subject",
+        "discussionSummary",
+        "recommendationsAndDecisions",
+        "responsiblePerson",
+        "executionDate",
+        "ownerId",
+        "updatedAt"
+      ]
+    },
+    "EmployeeDirectoryItem": {
+      "title": "Employee Directory Entry",
+      "description": "Saved participant/employee record for quick selection",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "jobTitle": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "department": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "jobTitle", "department", "ownerId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/minutes/{minuteId}": {
+      "schema": { "$ref": "#/entities/Minute" },
+      "description": "Main meeting minutes collection"
+    },
+    "/minute_locks/{lockId}": {
+      "schema": { "$ref": "#/entities/MinuteYearLock" },
+      "description": "Uniqueness lock per year_minuteNumber"
+    },
+    "/minutes/{minuteId}/participants/{participantId}": {
+      "schema": { "$ref": "#/entities/Participant" },
+      "description": "Subcollection of participants for a meeting minute"
+    },
+    "/minutes/{minuteId}/outcomes/{outcomeId}": {
+      "schema": { "$ref": "#/entities/OutcomeItem" },
+      "description": "Subcollection of inputs and outcomes for a meeting minute"
+    },
+    "/minutes/{minuteId}/ongoing_topics/{topicId}": {
+      "schema": { "$ref": "#/entities/OngoingTopic" },
+      "description": "Subcollection of ongoing topics for a meeting minute"
+    },
+    "/minutes/{minuteId}/new_topics/{topicId}": {
+      "schema": { "$ref": "#/entities/NewTopic" },
+      "description": "Subcollection of new topics for a meeting minute"
+    },
+    "/employee_directory/{employeeId}": {
+      "schema": { "$ref": "#/entities/EmployeeDirectoryItem" },
+      "description": "Directory of employees/participants"
+    }
+  }
+}

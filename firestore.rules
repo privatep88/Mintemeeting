@@ -1,0 +1,300 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAuthorizedWorkspaceOwner(ownerId) {
+      return ownerId == 'saaed_org_workspace' ||
+        (request.auth != null && request.auth.token.email_verified == true && ownerId == request.auth.uid);
+    }
+
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email_verified == true &&
+        (
+          request.auth.token.email == 'mr.aljefre@gmail.com' ||
+          exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        );
+    }
+
+    function isParentMinuteValid(minuteId) {
+      return (
+        exists(/databases/$(database)/documents/minutes/$(minuteId)) &&
+        (isAuthorizedWorkspaceOwner(get(/databases/$(database)/documents/minutes/$(minuteId)).data.ownerId) || isAdmin())
+      ) || (
+        existsAfter(/databases/$(database)/documents/minutes/$(minuteId)) &&
+        (isAuthorizedWorkspaceOwner(getAfter(/databases/$(database)/documents/minutes/$(minuteId)).data.ownerId) || isAdmin())
+      );
+    }
+
+    function isValidMinute(data) {
+      return data.keys().hasAll([
+        'minuteNumber', 'year', 'location', 'date', 'time', 'mainSubject',
+        'secretaryName', 'secretarySignature', 'chairmanName', 'chairmanSignature',
+        'status', 'participantsCount', 'searchText', 'ownerId', 'createdByName',
+        'updatedByName', 'archivedAt', 'archivedByName', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'minuteNumber', 'year', 'location', 'date', 'time', 'mainSubject',
+        'secretaryName', 'secretarySignature', 'chairmanName', 'chairmanSignature',
+        'status', 'participantsCount', 'searchText', 'ownerId', 'createdByName',
+        'updatedByName', 'archivedAt', 'archivedByName', 'createdAt', 'updatedAt'
+      ]) &&
+      data.minuteNumber is number && data.minuteNumber >= 1 && data.minuteNumber <= 999999 &&
+      data.year is number && data.year >= 1900 && data.year <= 2200 &&
+      data.location is string && data.location.size() <= 300 &&
+      data.date is string && data.date.size() <= 20 && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$') &&
+      data.time is string && data.time.size() <= 20 &&
+      data.mainSubject is string && data.mainSubject.size() <= 500 &&
+      data.secretaryName is string && data.secretaryName.size() <= 200 &&
+      data.secretarySignature is string && data.secretarySignature.size() <= 150000 &&
+      data.chairmanName is string && data.chairmanName.size() <= 200 &&
+      data.chairmanSignature is string && data.chairmanSignature.size() <= 150000 &&
+      data.status is string && data.status in ['draft', 'saved', 'archived'] &&
+      data.participantsCount is number && data.participantsCount >= 0 && data.participantsCount <= 10000 &&
+      data.searchText is string && data.searchText.size() <= 15000 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.createdByName is string && data.createdByName.size() <= 200 &&
+      data.updatedByName is string && data.updatedByName.size() <= 200 &&
+      data.archivedAt is string && data.archivedAt.size() <= 50 &&
+      data.archivedByName is string && data.archivedByName.size() <= 200 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidMinuteYearLock(data) {
+      return data.keys().hasAll(['minuteId', 'year', 'minuteNumber', 'ownerId', 'createdAt']) &&
+      data.keys().hasOnly(['minuteId', 'year', 'minuteNumber', 'ownerId', 'createdAt']) &&
+      data.minuteId is string && data.minuteId.size() >= 1 && data.minuteId.size() <= 128 && data.minuteId.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.year is number && data.year >= 1900 && data.year <= 2200 &&
+      data.minuteNumber is number && data.minuteNumber >= 1 && data.minuteNumber <= 999999 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.createdAt is timestamp;
+    }
+
+    function isValidParticipant(data, minuteId) {
+      return data.keys().hasAll(['minuteId', 'orderIndex', 'name', 'jobTitle', 'attendanceStatus', 'notes', 'ownerId', 'updatedAt']) &&
+      data.keys().hasOnly(['minuteId', 'orderIndex', 'name', 'jobTitle', 'attendanceStatus', 'notes', 'ownerId', 'updatedAt']) &&
+      data.minuteId is string && data.minuteId.size() <= 128 && data.minuteId == minuteId &&
+      data.orderIndex is number && data.orderIndex >= 0 && data.orderIndex <= 10000 &&
+      data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+      data.jobTitle is string && data.jobTitle.size() <= 200 &&
+      data.attendanceStatus is string && data.attendanceStatus in ['present', 'absent', 'excused'] &&
+      data.notes is string && data.notes.size() <= 1000 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidOutcomeItem(data, minuteId) {
+      return data.keys().hasAll(['minuteId', 'orderIndex', 'subject', 'recommendations', 'responsiblePerson', 'executionDate', 'ownerId', 'updatedAt']) &&
+      data.keys().hasOnly(['minuteId', 'orderIndex', 'subject', 'recommendations', 'responsiblePerson', 'executionDate', 'ownerId', 'updatedAt']) &&
+      data.minuteId is string && data.minuteId.size() <= 128 && data.minuteId == minuteId &&
+      data.orderIndex is number && data.orderIndex >= 0 && data.orderIndex <= 10000 &&
+      data.subject is string && data.subject.size() <= 5000 &&
+      data.recommendations is string && data.recommendations.size() <= 8000 &&
+      data.responsiblePerson is string && data.responsiblePerson.size() <= 300 &&
+      data.executionDate is string && data.executionDate.size() <= 30 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidOngoingTopic(data, minuteId) {
+      return data.keys().hasAll([
+        'minuteId', 'orderIndex', 'itemNumber', 'subject', 'latestUpdates',
+        'recommendationOrAction', 'followUpPerson', 'followUpDate', 'topicStatus',
+        'sourceMinuteId', 'sourceMinuteLabel', 'historyLog', 'ownerId', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'minuteId', 'orderIndex', 'itemNumber', 'subject', 'latestUpdates',
+        'recommendationOrAction', 'followUpPerson', 'followUpDate', 'topicStatus',
+        'sourceMinuteId', 'sourceMinuteLabel', 'historyLog', 'ownerId', 'updatedAt'
+      ]) &&
+      data.minuteId is string && data.minuteId.size() <= 128 && data.minuteId == minuteId &&
+      data.orderIndex is number && data.orderIndex >= 0 && data.orderIndex <= 10000 &&
+      data.itemNumber is string && data.itemNumber.size() <= 50 &&
+      data.subject is string && data.subject.size() <= 5000 &&
+      data.latestUpdates is string && data.latestUpdates.size() <= 5000 &&
+      data.recommendationOrAction is string && data.recommendationOrAction.size() <= 5000 &&
+      data.followUpPerson is string && data.followUpPerson.size() <= 300 &&
+      data.followUpDate is string && data.followUpDate.size() <= 30 &&
+      data.topicStatus is string && data.topicStatus.size() <= 100 &&
+      data.sourceMinuteId is string && data.sourceMinuteId.size() <= 128 &&
+      data.sourceMinuteLabel is string && data.sourceMinuteLabel.size() <= 200 &&
+      data.historyLog is string && data.historyLog.size() <= 8000 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidNewTopic(data, minuteId) {
+      return data.keys().hasAll([
+        'minuteId', 'orderIndex', 'itemNumber', 'subject', 'discussionSummary',
+        'recommendationsAndDecisions', 'responsiblePerson', 'executionDate', 'ownerId', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'minuteId', 'orderIndex', 'itemNumber', 'subject', 'discussionSummary',
+        'recommendationsAndDecisions', 'responsiblePerson', 'executionDate', 'ownerId', 'updatedAt'
+      ]) &&
+      data.minuteId is string && data.minuteId.size() <= 128 && data.minuteId == minuteId &&
+      data.orderIndex is number && data.orderIndex >= 0 && data.orderIndex <= 10000 &&
+      data.itemNumber is string && data.itemNumber.size() <= 50 &&
+      data.subject is string && data.subject.size() <= 5000 &&
+      data.discussionSummary is string && data.discussionSummary.size() <= 5000 &&
+      data.recommendationsAndDecisions is string && data.recommendationsAndDecisions.size() <= 5000 &&
+      data.responsiblePerson is string && data.responsiblePerson.size() <= 300 &&
+      data.executionDate is string && data.executionDate.size() <= 30 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidEmployeeDirectoryItem(data) {
+      return data.keys().hasAll(['name', 'jobTitle', 'department', 'ownerId', 'createdAt']) &&
+      data.keys().hasOnly(['name', 'jobTitle', 'department', 'ownerId', 'createdAt']) &&
+      data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+      data.jobTitle is string && data.jobTitle.size() <= 200 &&
+      data.department is string && data.department.size() <= 200 &&
+      data.ownerId is string && data.ownerId.size() >= 1 && data.ownerId.size() <= 128 &&
+      isAuthorizedWorkspaceOwner(data.ownerId) &&
+      data.createdAt is timestamp;
+    }
+
+    match /admins/{adminId} {
+      allow get: if request.auth != null && isValidId(adminId) && request.auth.uid == adminId;
+      allow list, create, update, delete: if false;
+    }
+
+    match /minutes/{minuteId} {
+      allow get: if isValidId(minuteId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin();
+      allow create: if isValidId(minuteId) && isValidMinute(incoming()) &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isValidId(minuteId) && isValidMinute(incoming()) &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          isAdmin() ||
+          (isAuthorizedWorkspaceOwner(existing().ownerId) &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'minuteNumber', 'year', 'location', 'date', 'time', 'mainSubject',
+              'secretaryName', 'secretarySignature', 'chairmanName', 'chairmanSignature',
+              'status', 'participantsCount', 'searchText', 'updatedByName',
+              'archivedAt', 'archivedByName', 'updatedAt'
+            ])
+          )
+        );
+      allow delete: if isValidId(minuteId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+
+      match /participants/{participantId} {
+        allow get: if isValidId(minuteId) && isValidId(participantId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+        allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isParentMinuteValid(minuteId) || isAdmin();
+        allow create: if isValidId(minuteId) && isValidId(participantId) &&
+          isValidParticipant(incoming(), minuteId) && incoming().updatedAt == request.time && isParentMinuteValid(minuteId);
+        allow update: if isValidId(minuteId) && isValidId(participantId) &&
+          isValidParticipant(incoming(), minuteId) &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().minuteId == existing().minuteId &&
+          incoming().updatedAt == request.time &&
+          (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly(['orderIndex', 'name', 'jobTitle', 'attendanceStatus', 'notes', 'updatedAt']))) &&
+          isParentMinuteValid(minuteId);
+        allow delete: if isValidId(minuteId) && isValidId(participantId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      }
+
+      match /outcomes/{outcomeId} {
+        allow get: if isValidId(minuteId) && isValidId(outcomeId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+        allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isParentMinuteValid(minuteId) || isAdmin();
+        allow create: if isValidId(minuteId) && isValidId(outcomeId) &&
+          isValidOutcomeItem(incoming(), minuteId) && incoming().updatedAt == request.time && isParentMinuteValid(minuteId);
+        allow update: if isValidId(minuteId) && isValidId(outcomeId) &&
+          isValidOutcomeItem(incoming(), minuteId) &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().minuteId == existing().minuteId &&
+          incoming().updatedAt == request.time &&
+          (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly(['orderIndex', 'subject', 'recommendations', 'responsiblePerson', 'executionDate', 'updatedAt']))) &&
+          isParentMinuteValid(minuteId);
+        allow delete: if isValidId(minuteId) && isValidId(outcomeId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      }
+
+      match /ongoing_topics/{topicId} {
+        allow get: if isValidId(minuteId) && isValidId(topicId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+        allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isParentMinuteValid(minuteId) || isAdmin();
+        allow create: if isValidId(minuteId) && isValidId(topicId) &&
+          isValidOngoingTopic(incoming(), minuteId) && incoming().updatedAt == request.time && isParentMinuteValid(minuteId);
+        allow update: if isValidId(minuteId) && isValidId(topicId) &&
+          isValidOngoingTopic(incoming(), minuteId) &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().minuteId == existing().minuteId &&
+          incoming().updatedAt == request.time &&
+          (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly([
+            'orderIndex', 'itemNumber', 'subject', 'latestUpdates', 'recommendationOrAction',
+            'followUpPerson', 'followUpDate', 'topicStatus', 'sourceMinuteId', 'sourceMinuteLabel', 'historyLog', 'updatedAt'
+          ]))) &&
+          isParentMinuteValid(minuteId);
+        allow delete: if isValidId(minuteId) && isValidId(topicId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      }
+
+      match /new_topics/{topicId} {
+        allow get: if isValidId(minuteId) && isValidId(topicId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+        allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isParentMinuteValid(minuteId) || isAdmin();
+        allow create: if isValidId(minuteId) && isValidId(topicId) &&
+          isValidNewTopic(incoming(), minuteId) && incoming().updatedAt == request.time && isParentMinuteValid(minuteId);
+        allow update: if isValidId(minuteId) && isValidId(topicId) &&
+          isValidNewTopic(incoming(), minuteId) &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().minuteId == existing().minuteId &&
+          incoming().updatedAt == request.time &&
+          (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly([
+            'orderIndex', 'itemNumber', 'subject', 'discussionSummary', 'recommendationsAndDecisions', 'responsiblePerson', 'executionDate', 'updatedAt'
+          ]))) &&
+          isParentMinuteValid(minuteId);
+        allow delete: if isValidId(minuteId) && isValidId(topicId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      }
+    }
+
+    match /minute_locks/{lockId} {
+      allow get: if isValidId(lockId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin();
+      allow create: if isValidId(lockId) && isValidMinuteYearLock(incoming()) &&
+        incoming().createdAt == request.time &&
+        existsAfter(/databases/$(database)/documents/minutes/$(incoming().minuteId));
+      allow update: if isValidId(lockId) && isValidMinuteYearLock(incoming()) &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt &&
+        (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly(['minuteId', 'year', 'minuteNumber']))) &&
+        existsAfter(/databases/$(database)/documents/minutes/$(incoming().minuteId));
+      allow delete: if isValidId(lockId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+    }
+
+    match /employee_directory/{employeeId} {
+      allow get: if isValidId(employeeId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+      allow list: if isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin();
+      allow create: if isValidId(employeeId) && isValidEmployeeDirectoryItem(incoming()) &&
+        incoming().createdAt == request.time;
+      allow update: if isValidId(employeeId) && isValidEmployeeDirectoryItem(incoming()) &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt &&
+        (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'jobTitle', 'department'])));
+      allow delete: if isValidId(employeeId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
+    }
+  }
+}

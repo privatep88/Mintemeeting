@@ -1,0 +1,6 @@
+{
+  "name": "ساعـد | نظام إدارة محاضر الاجتماعات والأرشفة",
+  "description": "نظام مؤسسي متكامل لإدارة محاضر الاجتماعات، متابعة التوصيات والمواضيع المستمرة، الاعتماد الإلكتروني، والأرشفة الرقمية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
