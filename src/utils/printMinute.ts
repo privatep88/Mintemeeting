@@ -65,11 +65,12 @@ export async function triggerOfficialMinutePrint(bundle: FullMinuteBundle): Prom
   const previousTitle = document.title || DEFAULT_APP_TITLE;
   const pdfTitle = getOfficialMinuteFileBaseName(bundle);
 
+  // Set document title so the browser defaults to `محضر_اجتماع_رقم_المحضر_تاريخ_الاجتماع.pdf`
   document.title = pdfTitle;
 
   await waitForPrintAssets();
 
-  // Wait two frames to guarantee layout & RTL font shaping are committed
+  // Wait two animation frames to guarantee layout & RTL font shaping are committed
   await new Promise<void>((resolve) => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => resolve());
@@ -78,7 +79,7 @@ export async function triggerOfficialMinutePrint(bundle: FullMinuteBundle): Prom
 
   const restoreTitle = () => {
     window.removeEventListener('afterprint', restoreTitle);
-    // If still on preview tab, keep the PDF title for Ctrl+P convenience; otherwise restore
+    // If user navigated away from preview, restore default title
     if (!document.querySelector('.print-preview-wrapper')) {
       document.title = previousTitle;
     }
@@ -86,6 +87,20 @@ export async function triggerOfficialMinutePrint(bundle: FullMinuteBundle): Prom
 
   window.addEventListener('afterprint', restoreTitle, { once: true });
 
-  window.focus();
-  window.print();
+  try {
+    window.focus();
+    // In iframe or sandboxed environments, window.print() can occasionally throw or be intercepted
+    window.print();
+  } catch {
+    // If standard window.print() is blocked by a sandboxed container, attempt top or parent focus
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.focus();
+        window.print();
+      }
+    } catch {
+      // Graceful fallback
+      window.print();
+    }
+  }
 }
