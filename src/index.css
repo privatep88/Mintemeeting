@@ -34,6 +34,35 @@
   }
 }
 
+/* Scoped Meeting Minutes Table Center Alignment (Preview, Print, and PDF) */
+.print-container .print-section-title {
+  text-align: right;
+}
+
+.print-container h1.print-section-title {
+  text-align: center;
+}
+
+.print-container table.saaed-minute-document-table {
+  direction: rtl;
+  border-collapse: collapse;
+}
+
+.print-container table.saaed-minute-document-table th,
+.print-container table.saaed-minute-document-table td {
+  text-align: center !important;
+  vertical-align: middle !important;
+  white-space: normal;
+  overflow-wrap: break-word !important;
+  word-break: break-word;
+  line-height: 1.6;
+  direction: rtl;
+}
+
+.print-container table.saaed-minute-document-table th.whitespace-nowrap {
+  white-space: nowrap !important;
+}
+
 /* Official Print & PDF Stylesheet (A4 Portrait 210mm x 297mm) */
 @media print {
   @page {
@@ -137,6 +166,20 @@
     break-inside: avoid !important;
     overflow-wrap: break-word !important;
     word-break: break-word !important;
+  }
+
+  .print-container table.saaed-minute-document-table th,
+  .print-container table.saaed-minute-document-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+    white-space: normal;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    line-height: 1.6 !important;
+  }
+
+  .print-container table.saaed-minute-document-table th.whitespace-nowrap {
+    white-space: nowrap !important;
   }
 
   .avoid-break {

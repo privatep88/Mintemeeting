@@ -39,9 +39,9 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
       {/* Official Institutional Header */}
       <div className="avoid-break flex items-center justify-between border-b-2 border-slate-900 pb-5 mb-6">
         <div className="space-y-1 text-right">
-          <p className="text-sm font-bold text-slate-900">نظام ساعـد المؤسسي (SAAED)</p>
-          <p className="text-xs text-slate-600">الأمانة العامة لإدارة الاجتماعات واللجان</p>
-          <p className="text-xs text-slate-600 font-mono-num">
+          <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">نظام ساعـد المؤسسي (SAAED)</p>
+          <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">إدارة الخدمات العامة - قسم إدارة المرافق</p>
+          <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">
             المرجع الرسمي: MIN-{toArabicNumerals(minute.year)}-{formatMinuteNumber(minute.minuteNumber)}
           </p>
         </div>
@@ -55,15 +55,15 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           />
         </div>
 
-        <div className="space-y-1 text-left font-mono-num text-xs text-slate-700">
+        <div className="space-y-1 text-left font-mono-num text-xs text-slate-600 whitespace-nowrap">
           <p>
-            <span className="font-semibold">رقم المحضر:</span> {formatMinuteNumber(minute.minuteNumber)} / {toArabicNumerals(minute.year)}
+            رقم المحضر: {formatMinuteNumber(minute.minuteNumber)} / {toArabicNumerals(minute.year)}
           </p>
           <p>
-            <span className="font-semibold">التاريخ:</span> {toArabicNumerals(minute.date) || '-'}
+            التاريخ: {toArabicNumerals(minute.date) || '-'}
           </p>
           <p>
-            <span className="font-semibold">الوقت:</span> {toArabicNumerals(minute.time) || '-'}
+            الوقت: {toArabicNumerals(minute.time) || '-'}
           </p>
         </div>
       </div>
@@ -82,50 +82,50 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
 
       {/* Section 1: Meeting Metadata */}
       <section className="print-section mb-6 avoid-break">
-        <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-slate-300 px-3 py-2 mb-0">
+        <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-slate-300 px-3 py-2 mb-0">
           أولاً: بيانات الاجتماع
         </h2>
-        <table className="w-full border-collapse border border-slate-300 text-xs">
+        <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
           <tbody>
             <tr>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold w-1/6">
+              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
                 رقم المحضر
               </th>
-              <td className="border border-slate-300 px-3 py-2 font-mono-num w-2/6">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num w-2/6">
                 {formatMinuteNumber(minute.minuteNumber)}
               </td>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold w-1/6">
+              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
                 سنة الاجتماع
               </th>
-              <td className="border border-slate-300 px-3 py-2 font-mono-num w-2/6">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num w-2/6">
                 {toArabicNumerals(minute.year)}
               </td>
             </tr>
             <tr>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold">
+              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
                 تاريخ الاجتماع
               </th>
-              <td className="border border-slate-300 px-3 py-2 font-mono-num">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                 {toArabicNumerals(minute.date) || '-'}
               </td>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold">
+              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
                 وقت الاجتماع
               </th>
-              <td className="border border-slate-300 px-3 py-2 font-mono-num">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                 {toArabicNumerals(minute.time) || '-'}
               </td>
             </tr>
             <tr>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold">
+              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
                 مكان الاجتماع
               </th>
-              <td className="border border-slate-300 px-3 py-2">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                 {toArabicNumerals(minute.location) || '-'}
               </td>
-              <th className="border border-slate-300 bg-slate-50 px-3 py-2 text-right font-bold">
+              <th className="border border-slate-300 bg-slate-50 px-2.5 py-2 text-center align-middle whitespace-nowrap leading-relaxed font-bold">
                 موضوع الاجتماع الرئيسي
               </th>
-              <td className="border border-slate-300 px-3 py-2">
+              <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                 {toArabicNumerals(minute.mainSubject) || '-'}
               </td>
             </tr>
@@ -135,38 +135,55 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
 
       {/* Section 2: Participants */}
       <section className="print-section mb-6">
-        <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
+        <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
           ثانياً: جدول الحضور والمشاركين ({toArabicNumerals(participants.length)})
         </h2>
-        <table className="w-full border-collapse border border-slate-300 text-xs">
+        <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
           <thead>
             <tr className="bg-slate-100 text-slate-900">
-              <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
-              <th className="border border-slate-300 px-3 py-2 text-right">الاسم</th>
-              <th className="border border-slate-300 px-3 py-2 text-right">المسمى الوظيفي</th>
-              <th className="border border-slate-300 px-3 py-2 text-center w-28">حالة الحضور</th>
-              <th className="border border-slate-300 px-3 py-2 text-right">ملاحظات</th>
+              <th className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-10">
+                م
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                الاسم
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                المسمى الوظيفي
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-28">
+                حالة الحضور
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                ملاحظات
+              </th>
             </tr>
           </thead>
           <tbody>
             {participants.length === 0 ? (
               <tr>
-                <td colSpan={5} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                <td
+                  colSpan={5}
+                  className="border border-slate-300 px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                >
                   لم يتم إدراج مشاركين في هذا المحضر
                 </td>
               </tr>
             ) : (
               participants.map((p, index) => (
                 <tr key={p.id}>
-                  <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num">
+                  <td className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                     {toArabicNumerals(index + 1)}
                   </td>
-                  <td className="border border-slate-300 px-3 py-2 font-semibold">{toArabicNumerals(p.name)}</td>
-                  <td className="border border-slate-300 px-3 py-2">{toArabicNumerals(p.jobTitle) || '-'}</td>
-                  <td className="border border-slate-300 px-3 py-2 text-center font-semibold">
+                  <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
+                    {toArabicNumerals(p.name)}
+                  </td>
+                  <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                    {toArabicNumerals(p.jobTitle) || '-'}
+                  </td>
+                  <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
                     {getAttendanceLabel(p.attendanceStatus)}
                   </td>
-                  <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words">
+                  <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                     {toArabicNumerals(p.notes) || '-'}
                   </td>
                 </tr>
@@ -178,24 +195,39 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
 
       {/* Section 3: Inputs & Outcomes */}
       <section className="print-section mb-6">
-        <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
+        <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
           ثالثاً: مدخلات ونتائج الاجتماع مفصلة أدناه
         </h2>
-        <table className="w-full border-collapse border border-slate-300 text-xs">
+        <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
           <thead>
             <tr className="bg-slate-100 text-slate-900">
-              <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
-              <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
-              <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-              <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
-              <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
-              <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
+              <th className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-10">
+                م
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-1/4">
+                الموضوع
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                التوصيات
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-32">
+                مسؤولية التنفيذ
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                تاريخ التنفيذ
+              </th>
+              <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                الحالة
+              </th>
             </tr>
           </thead>
           <tbody>
             {outcomes.length === 0 ? (
               <tr>
-                <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                <td
+                  colSpan={6}
+                  className="border border-slate-300 px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                >
                   لا توجد مدخلات أو نتائج مسجلة في هذا القسم
                 </td>
               </tr>
@@ -204,28 +236,28 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                 const completed = isCompletedTopicStatus(o.status);
                 return (
                   <tr key={o.id} className={completed ? 'bg-emerald-50/80' : ''}>
-                    <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                    <td className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                       {toArabicNumerals(index + 1)}
                     </td>
                     <td
-                      className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                      className={`border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold ${
                         completed ? 'text-emerald-950' : ''
                       }`}
                     >
                       {toArabicNumerals(o.subject)}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                    <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                       {toArabicNumerals(o.recommendations)}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2 align-top">
+                    <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                       {toArabicNumerals(o.responsiblePerson) || '-'}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                    <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                       {toArabicNumerals(o.executionDate) || '-'}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                    <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
                       {completed ? (
-                        <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                        <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold mx-auto">
                           <span>✓</span>
                           <span>{toArabicNumerals(o.status)}</span>
                         </span>
@@ -244,24 +276,39 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
       {/* Section 4: Ongoing Topics */}
       {bundle.showOngoingTable !== false && (
         <section className="print-section mb-6">
-          <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
+          <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
             رابعاً: المواضيع المستمرة
           </h2>
-          <table className="w-full border-collapse border border-slate-300 text-xs">
+          <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
             <thead>
               <tr className="bg-slate-100 text-slate-900">
-                <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
-                <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
+                <th className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-10">
+                  م
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-1/4">
+                  الموضوع
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                  التوصيات
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-32">
+                  مسؤولية التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  تاريخ التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  الحالة
+                </th>
               </tr>
             </thead>
             <tbody>
               {ongoingTopics.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td
+                    colSpan={6}
+                    className="border border-slate-300 px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                  >
                     لا توجد مواضيع مستمرة مسجلة في هذا القسم
                   </td>
                 </tr>
@@ -270,33 +317,33 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                   const completed = isCompletedTopicStatus(t.topicStatus);
                   return (
                     <tr key={t.id} className={completed ? 'bg-emerald-50/80' : ''}>
-                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(index + 1)}
                       </td>
                       <td
-                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                        className={`border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold ${
                           completed ? 'text-emerald-950' : ''
                         }`}
                       >
-                        <div>{toArabicNumerals(t.subject)}</div>
+                        <div className="text-center">{toArabicNumerals(t.subject)}</div>
                         {t.sourceMinuteLabel && (
-                          <div className="text-[10px] text-slate-500 mt-1">
+                          <div className="text-[10px] text-slate-500 mt-1 text-center">
                             مرحّل من: {toArabicNumerals(t.sourceMinuteLabel)}
                           </div>
                         )}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(t.recommendationOrAction) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(t.followUpPerson) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(t.followUpDate) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
                         {completed ? (
-                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold mx-auto">
                             <span>✓</span>
                             <span>{toArabicNumerals(t.topicStatus)}</span>
                           </span>
@@ -316,24 +363,39 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
       {/* Section 5: New Topics */}
       {bundle.showNewTopicsTable !== false && (
         <section className="print-section mb-6">
-          <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
+          <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
             خامساً: المواضيع الجديدة
           </h2>
-          <table className="w-full border-collapse border border-slate-300 text-xs">
+          <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
             <thead>
               <tr className="bg-slate-100 text-slate-900">
-                <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
-                <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
+                <th className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-10">
+                  م
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-1/4">
+                  الموضوع
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                  التوصيات
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-32">
+                  مسؤولية التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  تاريخ التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  الحالة
+                </th>
               </tr>
             </thead>
             <tbody>
               {newTopics.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td
+                    colSpan={6}
+                    className="border border-slate-300 px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                  >
                     لا توجد مواضيع جديدة مسجلة في هذا القسم
                   </td>
                 </tr>
@@ -342,28 +404,28 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                   const completed = isCompletedTopicStatus(n.status);
                   return (
                     <tr key={n.id} className={completed ? 'bg-emerald-50/80' : ''}>
-                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(index + 1)}
                       </td>
                       <td
-                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                        className={`border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold ${
                           completed ? 'text-emerald-950' : ''
                         }`}
                       >
                         {toArabicNumerals(n.subject)}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(n.recommendationsAndDecisions) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(n.responsiblePerson) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(n.executionDate) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
                         {completed ? (
-                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold mx-auto">
                             <span>✓</span>
                             <span>{toArabicNumerals(n.status)}</span>
                           </span>
@@ -383,24 +445,39 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
       {/* Custom Added Tables */}
       {(bundle.customTables ?? []).map((ct) => (
         <section key={ct.id} className="print-section mb-6">
-          <h2 className="print-section-title text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
+          <h2 className="print-section-title text-right text-sm font-bold text-slate-900 bg-slate-100 border border-b-0 border-slate-300 px-3 py-2">
             {toArabicNumerals(ct.title)}
           </h2>
-          <table className="w-full border-collapse border border-slate-300 text-xs">
+          <table className="saaed-minute-document-table w-full border-collapse border border-slate-300 text-xs">
             <thead>
               <tr className="bg-slate-100 text-slate-900">
-                <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
-                <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
+                <th className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-10">
+                  م
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-1/4">
+                  الموضوع
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                  التوصيات
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-32">
+                  مسؤولية التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  تاريخ التنفيذ
+                </th>
+                <th className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed w-24">
+                  الحالة
+                </th>
               </tr>
             </thead>
             <tbody>
               {ct.rows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td
+                    colSpan={6}
+                    className="border border-slate-300 px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                  >
                     لا توجد بنود مسجلة في هذا الجدول
                   </td>
                 </tr>
@@ -409,28 +486,28 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                   const completed = isCompletedTopicStatus(row.status);
                   return (
                     <tr key={row.id} className={completed ? 'bg-emerald-50/80' : ''}>
-                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(index + 1)}
                       </td>
                       <td
-                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                        className={`border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold ${
                           completed ? 'text-emerald-950' : ''
                         }`}
                       >
                         {toArabicNumerals(row.subject)}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(row.recommendations) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
                         {toArabicNumerals(row.responsiblePerson) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(row.executionDate) || '-'}
                       </td>
-                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                      <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
                         {completed ? (
-                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold mx-auto">
                             <span>✓</span>
                             <span>{toArabicNumerals(row.status)}</span>
                           </span>
