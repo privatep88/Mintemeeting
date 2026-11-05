@@ -31,13 +31,49 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
     );
   };
 
+  const formatMeetingTime = (rawTime?: string): string => {
+    if (!rawTime || !rawTime.trim()) return '-';
+    const trimmed = rawTime.trim();
+
+    // If it already contains Arabic period designation, return as is
+    if (trimmed.includes('صباح') || trimmed.includes('مساء')) {
+      return toArabicNumerals(trimmed);
+    }
+
+    // Check for HH:mm or HH:mm:ss format
+    const timeMatch = trimmed.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\s*(AM|PM|am|pm))?$/);
+    if (timeMatch) {
+      let hours = parseInt(timeMatch[1], 10);
+      const minutes = timeMatch[2];
+      const meridiem = timeMatch[4]?.toUpperCase();
+
+      let period = 'صباحاً';
+
+      if (meridiem) {
+        period = meridiem === 'PM' ? 'مساءً' : 'صباحاً';
+        if (meridiem === 'PM' && hours < 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+      } else {
+        period = hours >= 12 ? 'مساءً' : 'صباحاً';
+      }
+
+      // Convert 24h to 12h display
+      const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+      const formattedTime = `${String(displayHours).padStart(2, '0')}:${minutes}`;
+
+      return `${toArabicNumerals(formattedTime)} ${period}`;
+    }
+
+    return toArabicNumerals(trimmed);
+  };
+
   return (
     <div
       dir="rtl"
       className="print-container bg-white text-slate-900 border border-slate-300 p-8 md:p-10 max-w-[210mm] min-h-[297mm] mx-auto shadow-xs"
     >
       {/* Official Institutional Header */}
-      <div className="avoid-break flex items-center justify-between border-b-2 border-slate-900 pb-5 mb-6">
+      <div className="avoid-break grid grid-cols-3 items-center border-b-2 border-slate-900 pb-5 mb-6">
         <div className="space-y-1 text-right">
           <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">نظام ساعـد المؤسسي (SAAED)</p>
           <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">إدارة الخدمات العامة - قسم إدارة المرافق</p>
@@ -46,7 +82,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           </p>
         </div>
 
-        <div className="text-center">
+        <div className="flex items-center justify-center text-center">
           <img
             src={`${import.meta.env.BASE_URL}assets/aistudio/logo_1afd1154.png`}
             alt="شعار ساعد SAAED"
@@ -63,7 +99,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
             التاريخ: {toArabicNumerals(minute.date) || '-'}
           </p>
           <p>
-            الوقت: {toArabicNumerals(minute.time) || '-'}
+            الوقت: {formatMeetingTime(minute.time)}
           </p>
         </div>
       </div>
@@ -112,7 +148,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                 وقت الاجتماع
               </th>
               <td className="border border-slate-300 px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                {toArabicNumerals(minute.time) || '-'}
+                {formatMeetingTime(minute.time)}
               </td>
             </tr>
             <tr>
