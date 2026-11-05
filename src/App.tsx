@@ -79,7 +79,7 @@ type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics'
 
 type UserRole = 'admin' | 'secretary' | 'viewer';
 
-const LOCAL_AUTOSAVE_KEY = 'saaed_minutes_autosave_v1';
+const LOCAL_AUTOSAVE_KEY = 'saaed_minutes_autosave_v2';
 
 function createEmptyBundle(
   uid: string,
@@ -599,6 +599,13 @@ export default function App() {
   const canEdit = userRole === 'admin' || userRole === 'secretary';
   const canAuthorizeManualNumber = userRole === 'admin';
   const canArchiveOrRestore = userRole === 'admin' || userRole === 'secretary';
+
+  // Ensure viewer role defaults to visible tabs when 'active_list' and 'directory' are hidden
+  useEffect(() => {
+    if (!canEdit && (activeTab === 'active_list' || activeTab === 'directory')) {
+      setActiveTab('approved_list');
+    }
+  }, [canEdit, activeTab]);
 
   // Navigation Guard with Unsaved Changes Confirmation
   const guardedNavigate = (action: () => void) => {
@@ -1132,24 +1139,26 @@ export default function App() {
             </div>
           </a>
 
-          {/* Zone 2 (Center): 4 Main Navigation Tabs Styled Like Reference Image */}
+          {/* Zone 2 (Center): Main Navigation Tabs */}
           <nav className="hidden lg:flex items-center gap-2 text-sm">
-            <button
-              type="button"
-              onClick={() => guardedNavigate(() => setActiveTab('active_list'))}
-              className={`px-5 py-3.5 transition-all whitespace-nowrap shrink-0 flex items-center gap-2.5 rounded-t-xl cursor-pointer ${
-                activeTab === 'active_list'
-                  ? 'bg-gradient-to-b from-[#162F63] to-[#101F3D] text-white font-bold border-b-[3px] border-[#C7A66B] shadow-md'
-                  : 'text-[#101F3D]/80 hover:text-[#101F3D] hover:bg-slate-100/90 font-bold border-b-[3px] border-transparent rounded-xl'
-              }`}
-            >
-              <ClipboardList
-                className={`w-4 h-4 shrink-0 ${
-                  activeTab === 'active_list' ? 'text-[#C7A66B]' : 'text-[#1746B8]'
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => guardedNavigate(() => setActiveTab('active_list'))}
+                className={`px-5 py-3.5 transition-all whitespace-nowrap shrink-0 flex items-center gap-2.5 rounded-t-xl cursor-pointer ${
+                  activeTab === 'active_list'
+                    ? 'bg-gradient-to-b from-[#162F63] to-[#101F3D] text-white font-bold border-b-[3px] border-[#C7A66B] shadow-md'
+                    : 'text-[#101F3D]/80 hover:text-[#101F3D] hover:bg-slate-100/90 font-bold border-b-[3px] border-transparent rounded-xl'
                 }`}
-              />
-              <span>عرض المحاضر وتحريرها</span>
-            </button>
+              >
+                <ClipboardList
+                  className={`w-4 h-4 shrink-0 ${
+                    activeTab === 'active_list' ? 'text-[#C7A66B]' : 'text-[#1746B8]'
+                  }`}
+                />
+                <span>عرض المحاضر وتحريرها</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -1185,22 +1194,24 @@ export default function App() {
               <span>المواضيع المكتملة</span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => guardedNavigate(() => setActiveTab('directory'))}
-              className={`px-5 py-3.5 transition-all whitespace-nowrap shrink-0 flex items-center gap-2.5 rounded-t-xl cursor-pointer ${
-                activeTab === 'directory'
-                  ? 'bg-gradient-to-b from-[#162F63] to-[#101F3D] text-white font-bold border-b-[3px] border-[#C7A66B] shadow-md'
-                  : 'text-[#101F3D]/80 hover:text-[#101F3D] hover:bg-slate-100/90 font-bold border-b-[3px] border-transparent rounded-xl'
-              }`}
-            >
-              <Users
-                className={`w-4 h-4 shrink-0 ${
-                  activeTab === 'directory' ? 'text-[#C7A66B]' : 'text-[#1746B8]'
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => guardedNavigate(() => setActiveTab('directory'))}
+                className={`px-5 py-3.5 transition-all whitespace-nowrap shrink-0 flex items-center gap-2.5 rounded-t-xl cursor-pointer ${
+                  activeTab === 'directory'
+                    ? 'bg-gradient-to-b from-[#162F63] to-[#101F3D] text-white font-bold border-b-[3px] border-[#C7A66B] shadow-md'
+                    : 'text-[#101F3D]/80 hover:text-[#101F3D] hover:bg-slate-100/90 font-bold border-b-[3px] border-transparent rounded-xl'
                 }`}
-              />
-              <span>سجل المشاركين</span>
-            </button>
+              >
+                <Users
+                  className={`w-4 h-4 shrink-0 ${
+                    activeTab === 'directory' ? 'text-[#C7A66B]' : 'text-[#1746B8]'
+                  }`}
+                />
+                <span>سجل المشاركين</span>
+              </button>
+            )}
           </nav>
 
           {/* Zone 3 (Left in RTL): Primary CTA Button */}
@@ -1236,17 +1247,19 @@ export default function App() {
           {/* Mobile Nav + Operator Name + Role Permissions Switcher */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex lg:hidden items-center gap-1 bg-white/10 p-1 rounded-lg border border-white/15">
-              <button
-                type="button"
-                onClick={() => guardedNavigate(() => setActiveTab('active_list'))}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
-                  activeTab === 'active_list'
-                    ? 'bg-[#C7A66B] text-[#101F3D]'
-                    : 'text-white/85 hover:text-white'
-                }`}
-              >
-                المسودات
-              </button>
+              {canEdit && (
+                <button
+                  type="button"
+                  onClick={() => guardedNavigate(() => setActiveTab('active_list'))}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+                    activeTab === 'active_list'
+                      ? 'bg-[#C7A66B] text-[#101F3D]'
+                      : 'text-white/85 hover:text-white'
+                  }`}
+                >
+                  المسودات
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => guardedNavigate(() => setActiveTab('approved_list'))}
@@ -1269,17 +1282,19 @@ export default function App() {
               >
                 المواضيع المكتملة
               </button>
-              <button
-                type="button"
-                onClick={() => guardedNavigate(() => setActiveTab('directory'))}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
-                  activeTab === 'directory'
-                    ? 'bg-[#C7A66B] text-[#101F3D]'
-                    : 'text-white/85 hover:text-white'
-                }`}
-              >
-                السجل
-              </button>
+              {canEdit && (
+                <button
+                  type="button"
+                  onClick={() => guardedNavigate(() => setActiveTab('directory'))}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+                    activeTab === 'directory'
+                      ? 'bg-[#C7A66B] text-[#101F3D]'
+                      : 'text-white/85 hover:text-white'
+                  }`}
+                >
+                  السجل
+                </button>
+              )}
             </div>
 
             <div className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
