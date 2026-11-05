@@ -198,11 +198,12 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
     new TableRow({
       tableHeader: true,
       children: [
-        createHeaderCell('م', 7),
-        createHeaderCell('الموضوع', 30),
-        createHeaderCell('التوصيات', 33),
-        createHeaderCell('مسؤولية التنفيذ', 17),
-        createHeaderCell('تاريخ التنفيذ', 13),
+        createHeaderCell('م', 6),
+        createHeaderCell('الموضوع', 26),
+        createHeaderCell('التوصيات', 30),
+        createHeaderCell('مسؤولية التنفيذ', 15),
+        createHeaderCell('تاريخ التنفيذ', 12),
+        createHeaderCell('الحالة', 11),
       ],
     }),
   ];
@@ -215,6 +216,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
           createDataCell('لا توجد مدخلات أو نتائج مسجلة'),
           createDataCell('-'),
           createDataCell('-'),
+          createDataCell('-', AlignmentType.CENTER),
           createDataCell('-', AlignmentType.CENTER),
         ],
       })
@@ -229,6 +231,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
             createDataCell(o.recommendations),
             createDataCell(o.responsiblePerson),
             createDataCell(o.executionDate || '-', AlignmentType.CENTER),
+            createDataCell(o.status || '-', AlignmentType.CENTER),
           ],
         })
       );
@@ -247,11 +250,12 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
     new TableRow({
       tableHeader: true,
       children: [
-        createHeaderCell('م', 7),
-        createHeaderCell('الموضوع', 30),
-        createHeaderCell('التوصيات', 33),
-        createHeaderCell('مسؤولية التنفيذ', 17),
-        createHeaderCell('تاريخ التنفيذ', 13),
+        createHeaderCell('م', 6),
+        createHeaderCell('الموضوع', 26),
+        createHeaderCell('التوصيات', 30),
+        createHeaderCell('مسؤولية التنفيذ', 15),
+        createHeaderCell('تاريخ التنفيذ', 12),
+        createHeaderCell('الحالة', 11),
       ],
     }),
   ];
@@ -264,6 +268,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
           createDataCell('لا توجد مواضيع مستمرة مسجلة'),
           createDataCell('-'),
           createDataCell('-'),
+          createDataCell('-', AlignmentType.CENTER),
           createDataCell('-', AlignmentType.CENTER),
         ],
       })
@@ -278,6 +283,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
             createDataCell(t.recommendationOrAction),
             createDataCell(t.followUpPerson),
             createDataCell(t.followUpDate || '-', AlignmentType.CENTER),
+            createDataCell(t.topicStatus || '-', AlignmentType.CENTER),
           ],
         })
       );
@@ -296,11 +302,12 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
     new TableRow({
       tableHeader: true,
       children: [
-        createHeaderCell('م', 7),
-        createHeaderCell('الموضوع', 30),
-        createHeaderCell('التوصيات', 33),
-        createHeaderCell('مسؤولية التنفيذ', 17),
-        createHeaderCell('تاريخ التنفيذ', 13),
+        createHeaderCell('م', 6),
+        createHeaderCell('الموضوع', 26),
+        createHeaderCell('التوصيات', 30),
+        createHeaderCell('مسؤولية التنفيذ', 15),
+        createHeaderCell('تاريخ التنفيذ', 12),
+        createHeaderCell('الحالة', 11),
       ],
     }),
   ];
@@ -313,6 +320,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
           createDataCell('لا توجد مواضيع جديدة مسجلة'),
           createDataCell('-'),
           createDataCell('-'),
+          createDataCell('-', AlignmentType.CENTER),
           createDataCell('-', AlignmentType.CENTER),
         ],
       })
@@ -327,6 +335,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
             createDataCell(n.recommendationsAndDecisions),
             createDataCell(n.responsiblePerson),
             createDataCell(n.executionDate || '-', AlignmentType.CENTER),
+            createDataCell(n.status || '-', AlignmentType.CENTER),
           ],
         })
       );
@@ -429,11 +438,12 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
       new TableRow({
         tableHeader: true,
         children: [
-          createHeaderCell('م', 7),
-          createHeaderCell('الموضوع', 30),
-          createHeaderCell('التوصيات', 33),
-          createHeaderCell('مسؤولية التنفيذ', 17),
-          createHeaderCell('تاريخ التنفيذ', 13),
+          createHeaderCell('م', 6),
+          createHeaderCell('الموضوع', 26),
+          createHeaderCell('التوصيات', 30),
+          createHeaderCell('مسؤولية التنفيذ', 15),
+          createHeaderCell('تاريخ التنفيذ', 12),
+          createHeaderCell('الحالة', 11),
         ],
       }),
     ];
@@ -446,6 +456,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
             createDataCell('لا توجد بنود مسجلة في هذا الجدول'),
             createDataCell('-'),
             createDataCell('-'),
+            createDataCell('-', AlignmentType.CENTER),
             createDataCell('-', AlignmentType.CENTER),
           ],
         })
@@ -460,6 +471,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
               createDataCell(r.recommendations),
               createDataCell(r.responsiblePerson),
               createDataCell(r.executionDate || '-', AlignmentType.CENTER),
+              createDataCell(r.status || '-', AlignmentType.CENTER),
             ],
           })
         );

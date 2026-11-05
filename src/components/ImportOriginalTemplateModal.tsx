@@ -179,19 +179,19 @@ export const ImportOriginalTemplateModal: React.FC<ImportOriginalTemplateModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4">
-      <div className="bg-white border border-slate-200 rounded-lg max-w-2xl w-full shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-          <div className="flex items-center gap-2">
-            <Upload className="w-5 h-5 text-blue-800" />
-            <h3 className="text-base font-bold text-slate-900">
+    <div className="fixed inset-0 z-50 bg-[#101F3D]/70 backdrop-blur-[2px] flex items-center justify-center p-4">
+      <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-l from-[#101F3D] to-[#1746B8] text-white border-b border-[#C7A66B]/40">
+          <div className="flex items-center gap-2.5">
+            <Upload className="w-5 h-5 text-[#C7A66B]" />
+            <h3 className="text-base font-extrabold text-white font-display">
               استيراد محضر أو قائمة المشاركين كما وردت حرفياً
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-slate-900 rounded-md"
+            className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

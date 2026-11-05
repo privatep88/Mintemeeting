@@ -16,6 +16,21 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
     return status;
   };
 
+  const isCompletedTopicStatus = (status?: string): boolean => {
+    if (!status) return false;
+    const normalized = status.trim().toLowerCase();
+    return (
+      normalized.includes('مكتمل') ||
+      normalized.includes('تم التنفيذ') ||
+      normalized.includes('تم الإنجاز') ||
+      normalized.includes('تم الانجاز') ||
+      normalized.includes('منجز') ||
+      normalized === 'تم' ||
+      normalized === 'completed' ||
+      normalized === 'done'
+    );
+  };
+
   return (
     <div
       dir="rtl"
@@ -172,37 +187,55 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
               <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
               <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
               <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-              <th className="border border-slate-300 px-3 py-2 text-right w-36">مسؤولية التنفيذ</th>
-              <th className="border border-slate-300 px-3 py-2 text-center w-28">تاريخ التنفيذ</th>
+              <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
+              <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
+              <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
             </tr>
           </thead>
           <tbody>
             {outcomes.length === 0 ? (
               <tr>
-                <td colSpan={5} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
                   لا توجد مدخلات أو نتائج مسجلة في هذا القسم
                 </td>
               </tr>
             ) : (
-              outcomes.map((o, index) => (
-                <tr key={o.id}>
-                  <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
-                    {toArabicNumerals(index + 1)}
-                  </td>
-                  <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold">
-                    {toArabicNumerals(o.subject)}
-                  </td>
-                  <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
-                    {toArabicNumerals(o.recommendations)}
-                  </td>
-                  <td className="border border-slate-300 px-3 py-2 align-top">
-                    {toArabicNumerals(o.responsiblePerson) || '-'}
-                  </td>
-                  <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
-                    {toArabicNumerals(o.executionDate) || '-'}
-                  </td>
-                </tr>
-              ))
+              outcomes.map((o, index) => {
+                const completed = isCompletedTopicStatus(o.status);
+                return (
+                  <tr key={o.id} className={completed ? 'bg-emerald-50/80' : ''}>
+                    <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                      {toArabicNumerals(index + 1)}
+                    </td>
+                    <td
+                      className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                        completed ? 'text-emerald-950' : ''
+                      }`}
+                    >
+                      {toArabicNumerals(o.subject)}
+                    </td>
+                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                      {toArabicNumerals(o.recommendations)}
+                    </td>
+                    <td className="border border-slate-300 px-3 py-2 align-top">
+                      {toArabicNumerals(o.responsiblePerson) || '-'}
+                    </td>
+                    <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                      {toArabicNumerals(o.executionDate) || '-'}
+                    </td>
+                    <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                      {completed ? (
+                        <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                          <span>✓</span>
+                          <span>{toArabicNumerals(o.status)}</span>
+                        </span>
+                      ) : (
+                        toArabicNumerals(o.status) || '-'
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -220,42 +253,60 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                 <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
                 <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
                 <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-36">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-28">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
               </tr>
             </thead>
             <tbody>
               {ongoingTopics.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
                     لا توجد مواضيع مستمرة مسجلة في هذا القسم
                   </td>
                 </tr>
               ) : (
-                ongoingTopics.map((t, index) => (
-                  <tr key={t.id}>
-                    <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(index + 1)}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold">
-                      <div>{toArabicNumerals(t.subject)}</div>
-                      {t.sourceMinuteLabel && (
-                        <div className="text-[10px] text-slate-500 mt-1">
-                          مرحّل من: {toArabicNumerals(t.sourceMinuteLabel)}
-                        </div>
-                      )}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
-                      {toArabicNumerals(t.recommendationOrAction) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 align-top">
-                      {toArabicNumerals(t.followUpPerson) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(t.followUpDate) || '-'}
-                    </td>
-                  </tr>
-                ))
+                ongoingTopics.map((t, index) => {
+                  const completed = isCompletedTopicStatus(t.topicStatus);
+                  return (
+                    <tr key={t.id} className={completed ? 'bg-emerald-50/80' : ''}>
+                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(index + 1)}
+                      </td>
+                      <td
+                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                          completed ? 'text-emerald-950' : ''
+                        }`}
+                      >
+                        <div>{toArabicNumerals(t.subject)}</div>
+                        {t.sourceMinuteLabel && (
+                          <div className="text-[10px] text-slate-500 mt-1">
+                            مرحّل من: {toArabicNumerals(t.sourceMinuteLabel)}
+                          </div>
+                        )}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                        {toArabicNumerals(t.recommendationOrAction) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 align-top">
+                        {toArabicNumerals(t.followUpPerson) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(t.followUpDate) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                        {completed ? (
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                            <span>✓</span>
+                            <span>{toArabicNumerals(t.topicStatus)}</span>
+                          </span>
+                        ) : (
+                          toArabicNumerals(t.topicStatus) || '-'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -274,37 +325,55 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                 <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
                 <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
                 <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-36">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-28">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
               </tr>
             </thead>
             <tbody>
               {newTopics.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
                     لا توجد مواضيع جديدة مسجلة في هذا القسم
                   </td>
                 </tr>
               ) : (
-                newTopics.map((n, index) => (
-                  <tr key={n.id}>
-                    <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(index + 1)}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold">
-                      {toArabicNumerals(n.subject)}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
-                      {toArabicNumerals(n.recommendationsAndDecisions) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 align-top">
-                      {toArabicNumerals(n.responsiblePerson) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(n.executionDate) || '-'}
-                    </td>
-                  </tr>
-                ))
+                newTopics.map((n, index) => {
+                  const completed = isCompletedTopicStatus(n.status);
+                  return (
+                    <tr key={n.id} className={completed ? 'bg-emerald-50/80' : ''}>
+                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(index + 1)}
+                      </td>
+                      <td
+                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                          completed ? 'text-emerald-950' : ''
+                        }`}
+                      >
+                        {toArabicNumerals(n.subject)}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                        {toArabicNumerals(n.recommendationsAndDecisions) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 align-top">
+                        {toArabicNumerals(n.responsiblePerson) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(n.executionDate) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                        {completed ? (
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                            <span>✓</span>
+                            <span>{toArabicNumerals(n.status)}</span>
+                          </span>
+                        ) : (
+                          toArabicNumerals(n.status) || '-'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -323,37 +392,55 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                 <th className="border border-slate-300 px-2.5 py-2 text-center w-10">م</th>
                 <th className="border border-slate-300 px-3 py-2 text-right w-1/4">الموضوع</th>
                 <th className="border border-slate-300 px-3 py-2 text-right">التوصيات</th>
-                <th className="border border-slate-300 px-3 py-2 text-right w-36">مسؤولية التنفيذ</th>
-                <th className="border border-slate-300 px-3 py-2 text-center w-28">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-right w-32">مسؤولية التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">تاريخ التنفيذ</th>
+                <th className="border border-slate-300 px-3 py-2 text-center w-24">الحالة</th>
               </tr>
             </thead>
             <tbody>
               {ct.rows.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
+                  <td colSpan={6} className="border border-slate-300 px-3 py-4 text-center text-slate-500">
                     لا توجد بنود مسجلة في هذا الجدول
                   </td>
                 </tr>
               ) : (
-                ct.rows.map((row, index) => (
-                  <tr key={row.id}>
-                    <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(index + 1)}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold">
-                      {toArabicNumerals(row.subject)}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
-                      {toArabicNumerals(row.recommendations) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 align-top">
-                      {toArabicNumerals(row.responsiblePerson) || '-'}
-                    </td>
-                    <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
-                      {toArabicNumerals(row.executionDate) || '-'}
-                    </td>
-                  </tr>
-                ))
+                ct.rows.map((row, index) => {
+                  const completed = isCompletedTopicStatus(row.status);
+                  return (
+                    <tr key={row.id} className={completed ? 'bg-emerald-50/80' : ''}>
+                      <td className="border border-slate-300 px-2.5 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(index + 1)}
+                      </td>
+                      <td
+                        className={`border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top font-semibold ${
+                          completed ? 'text-emerald-950' : ''
+                        }`}
+                      >
+                        {toArabicNumerals(row.subject)}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 whitespace-pre-wrap break-words align-top">
+                        {toArabicNumerals(row.recommendations) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 align-top">
+                        {toArabicNumerals(row.responsiblePerson) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center font-mono-num align-top">
+                        {toArabicNumerals(row.executionDate) || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-3 py-2 text-center align-top font-semibold">
+                        {completed ? (
+                          <span className="inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">
+                            <span>✓</span>
+                            <span>{toArabicNumerals(row.status)}</span>
+                          </span>
+                        ) : (
+                          toArabicNumerals(row.status) || '-'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

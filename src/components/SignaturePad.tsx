@@ -200,10 +200,13 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
   const datalistId = `sig-list-${label.replace(/\s+/g, '-')}`;
 
   return (
-    <div className="border border-slate-200 bg-white p-5 rounded-lg">
+    <div className="border border-slate-200/90 bg-white p-5 rounded-2xl shadow-2xs">
       <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
-        <h4 className="text-base font-bold text-slate-900">{label}</h4>
-        <span className="text-xs text-slate-500">إرفاق صورة توقيع أو رسم أو توقيع نصي</span>
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#C7A66B]" />
+          <h4 className="text-base font-extrabold text-[#101F3D] font-display">{label}</h4>
+        </div>
+        <span className="text-xs font-medium text-[#64748B]">إرفاق صورة توقيع أو رسم أو توقيع نصي</span>
       </div>
 
       {/* Hidden File Input for Signature Image Attachment */}

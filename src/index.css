@@ -1,9 +1,23 @@
 @import "tailwindcss";
 
+:root {
+  --saaed-navy: #101F3D;
+  --saaed-navy-deep: #0B162C;
+  --saaed-blue: #1746B8;
+  --saaed-electric: #2878E3;
+  --saaed-gold: #C7A66B;
+  --saaed-gold-light: #E5CFA0;
+  --saaed-bg: #F4F7FC;
+  --saaed-surface: #FFFFFF;
+}
+
 @layer base {
   body {
     font-family: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
     direction: rtl;
+    background-color: #F4F7FC;
+    color: #101F3D;
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, .font-display {
@@ -11,7 +25,7 @@
   }
 
   .font-mono-num {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
     font-variant-numeric: tabular-nums;
   }
 

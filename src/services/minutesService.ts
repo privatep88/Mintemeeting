@@ -84,7 +84,7 @@ export function computeSearchText(bundle: {
   (bundle.customTables || []).forEach((ct) => {
     customParts.push(ct.title);
     ct.rows.forEach((r) => {
-      customParts.push(`${r.subject} ${r.recommendations} ${r.responsiblePerson}`);
+      customParts.push(`${r.subject} ${r.recommendations} ${r.responsiblePerson} ${r.status || ''}`);
     });
   });
 
@@ -97,12 +97,16 @@ export function computeSearchText(bundle: {
     bundle.minute.chairmanName,
     bundle.minute.secretaryName,
     ...bundle.participants.map((p) => `${p.name} ${p.jobTitle} ${p.notes}`),
-    ...bundle.outcomes.map((o) => `${o.subject} ${o.recommendations} ${o.responsiblePerson}`),
+    ...bundle.outcomes.map(
+      (o) => `${o.subject} ${o.recommendations} ${o.responsiblePerson} ${o.status || ''}`
+    ),
     ...bundle.ongoingTopics.map(
-      (t) => `${t.subject} ${t.latestUpdates} ${t.recommendationOrAction} ${t.followUpPerson}`
+      (t) =>
+        `${t.subject} ${t.latestUpdates} ${t.recommendationOrAction} ${t.followUpPerson} ${t.topicStatus || ''}`
     ),
     ...bundle.newTopics.map(
-      (n) => `${n.subject} ${n.discussionSummary} ${n.recommendationsAndDecisions} ${n.responsiblePerson}`
+      (n) =>
+        `${n.subject} ${n.discussionSummary} ${n.recommendationsAndDecisions} ${n.responsiblePerson} ${n.status || ''}`
     ),
     ...customParts,
   ];
@@ -157,7 +161,10 @@ export async function checkMinuteNumberConflict(
 /**
  * Computes the next sequential minuteNumber for the specified year.
  */
-export async function getNextSequentialMinuteNumber(year: number): Promise<number> {
+export async function getNextSequentialMinuteNumber(
+  year: number,
+  minBaseNumber = 0
+): Promise<number> {
   const uid = getActiveOwnerId();
 
   const q = query(
@@ -168,13 +175,19 @@ export async function getNextSequentialMinuteNumber(year: number): Promise<numbe
 
   try {
     const snap = await getDocs(q);
-    if (snap.empty) return 1;
+    if (snap.empty && minBaseNumber < 1) return 1;
+    let maxNumber = minBaseNumber;
     const usedNumbers = new Set<number>();
     snap.forEach((docSnap) => {
       const num = Number(docSnap.data().minuteNumber) || 0;
-      if (num > 0) usedNumbers.add(num);
+      if (num > 0) {
+        usedNumbers.add(num);
+        if (num > maxNumber) {
+          maxNumber = num;
+        }
+      }
     });
-    let candidate = 1;
+    let candidate = maxNumber > 0 ? maxNumber + 1 : 1;
     while (usedNumbers.has(candidate)) {
       candidate += 1;
     }
@@ -252,7 +265,7 @@ export async function loadFullMinute(minuteId: string): Promise<FullMinuteBundle
     }
   };
 
-  const [participants, outcomes, ongoingTopics, rawNewTopics] = await Promise.all([
+  const [participants, rawOutcomes, ongoingTopics, rawNewTopics] = await Promise.all([
     loadSub<ParticipantRow>('participants'),
     loadSub<OutcomeRow>('outcomes'),
     loadSub<OngoingTopicRow>('ongoing_topics'),
@@ -262,6 +275,9 @@ export async function loadFullMinute(minuteId: string): Promise<FullMinuteBundle
   let showOngoingTable = true;
   let showNewTopicsTable = true;
   let customTablesMeta: Array<{ id: string; title: string }> = [];
+  let outcomeStatuses: Record<string, string> = {};
+  let newTopicStatuses: Record<string, string> = {};
+  let customRowStatuses: Record<string, string> = {};
 
   const metaDoc = rawNewTopics.find((r) => r.itemNumber === '__META_CONFIG__');
   if (metaDoc && metaDoc.discussionSummary) {
@@ -276,10 +292,24 @@ export async function loadFullMinute(minuteId: string): Promise<FullMinuteBundle
       if (Array.isArray(parsed.customTablesMeta)) {
         customTablesMeta = parsed.customTablesMeta;
       }
+      if (parsed.outcomeStatuses && typeof parsed.outcomeStatuses === 'object') {
+        outcomeStatuses = parsed.outcomeStatuses;
+      }
+      if (parsed.newTopicStatuses && typeof parsed.newTopicStatuses === 'object') {
+        newTopicStatuses = parsed.newTopicStatuses;
+      }
+      if (parsed.customRowStatuses && typeof parsed.customRowStatuses === 'object') {
+        customRowStatuses = parsed.customRowStatuses;
+      }
     } catch {
       // Ignore malformed metadata
     }
   }
+
+  const outcomes: OutcomeRow[] = rawOutcomes.map((o) => ({
+    ...o,
+    status: o.status || outcomeStatuses[o.id] || '',
+  }));
 
   const customRowDocs = rawNewTopics.filter((r) =>
     String(r.itemNumber || '').startsWith('__CT_ROW__:')
@@ -294,6 +324,7 @@ export async function loadFullMinute(minuteId: string): Promise<FullMinuteBundle
       ...n,
       orderIndex: idx + 1,
       itemNumber: String(idx + 1),
+      status: n.status || newTopicStatuses[n.id] || '',
     }));
 
   const customTableMap = new Map<string, CustomTableSection>();
@@ -324,6 +355,7 @@ export async function loadFullMinute(minuteId: string): Promise<FullMinuteBundle
       recommendations: docRow.recommendationsAndDecisions || '',
       responsiblePerson: docRow.responsiblePerson || '',
       executionDate: docRow.executionDate || '',
+      status: customRowStatuses[docRow.id] || '',
     };
     section.rows.push(rowItem);
   });
@@ -401,6 +433,7 @@ export async function saveFullMinuteToDb(
     recommendations: truncate(o.recommendations, 8000),
     responsiblePerson: truncate(o.responsiblePerson, 300),
     executionDate: truncate(o.executionDate, 30),
+    status: truncate(o.status || '', 100),
     ownerId: recordOwnerId,
   }));
 
@@ -421,7 +454,7 @@ export async function saveFullMinuteToDb(
     recommendationOrAction: truncate(t.recommendationOrAction, 5000),
     followUpPerson: truncate(t.followUpPerson, 300),
     followUpDate: truncate(t.followUpDate, 30),
-    topicStatus: truncate(t.topicStatus || 'قيد المتابعة', 100),
+    topicStatus: truncate(t.topicStatus || '', 100),
     sourceMinuteId: truncate(t.sourceMinuteId, 128),
     sourceMinuteLabel: truncate(t.sourceMinuteLabel, 200),
     historyLog: truncate(t.historyLog, 8000),
@@ -438,34 +471,27 @@ export async function saveFullMinuteToDb(
     recommendationsAndDecisions: truncate(n.recommendationsAndDecisions, 5000),
     responsiblePerson: truncate(n.responsiblePerson, 300),
     executionDate: truncate(n.executionDate, 30),
+    status: truncate(n.status || '', 100),
     ownerId: recordOwnerId,
   }));
 
-  // Persist section visibility and custom tables metadata + rows inside new_topics collection
+  // Persist section visibility, item statuses, and custom tables metadata + rows inside new_topics collection
   const customTablesMeta = customTables.map((ct) => ({
     id: sanitizeId(ct.id),
     title: truncate(ct.title || 'جدول إضافي', 200),
   }));
 
-  const metaConfigRow: NewTopicRow = {
-    id: 'meta_sections_config',
-    minuteId,
-    orderIndex: 9000,
-    itemNumber: '__META_CONFIG__',
-    subject: '__META_CONFIG__',
-    discussionSummary: truncate(
-      JSON.stringify({
-        showOngoingTable,
-        showNewTopicsTable,
-        customTablesMeta,
-      }),
-      4900
-    ),
-    recommendationsAndDecisions: '',
-    responsiblePerson: '',
-    executionDate: '',
-    ownerId: recordOwnerId,
-  };
+  const outcomeStatuses: Record<string, string> = {};
+  normalizedOutcomes.forEach((o) => {
+    if (o.status) outcomeStatuses[o.id] = o.status;
+  });
+
+  const newTopicStatuses: Record<string, string> = {};
+  normalizedNew.forEach((n) => {
+    if (n.status) newTopicStatuses[n.id] = n.status;
+  });
+
+  const customRowStatuses: Record<string, string> = {};
 
   const customTableAsNewTopicRows: NewTopicRow[] = [];
   let customGlobalOrder = 1000;
@@ -474,8 +500,12 @@ export async function saveFullMinuteToDb(
     const cleanTitle = truncate(ct.title || 'جدول إضافي', 200);
     ct.rows.forEach((r, idx) => {
       customGlobalOrder += 1;
+      const cleanRowId = sanitizeId(r.id || generateSafeId(`ct_${idx}`));
+      if (r.status) {
+        customRowStatuses[cleanRowId] = truncate(r.status, 100);
+      }
       customTableAsNewTopicRows.push({
-        id: sanitizeId(r.id || generateSafeId(`ct_${idx}`)),
+        id: cleanRowId,
         minuteId,
         orderIndex: customGlobalOrder,
         itemNumber: truncate(`__CT_ROW__:${cleanTableId}`, 50),
@@ -488,6 +518,29 @@ export async function saveFullMinuteToDb(
       });
     });
   });
+
+  const metaConfigRow: NewTopicRow = {
+    id: 'meta_sections_config',
+    minuteId,
+    orderIndex: 9000,
+    itemNumber: '__META_CONFIG__',
+    subject: '__META_CONFIG__',
+    discussionSummary: truncate(
+      JSON.stringify({
+        showOngoingTable,
+        showNewTopicsTable,
+        customTablesMeta,
+        outcomeStatuses,
+        newTopicStatuses,
+        customRowStatuses,
+      }),
+      4900
+    ),
+    recommendationsAndDecisions: '',
+    responsiblePerson: '',
+    executionDate: '',
+    ownerId: recordOwnerId,
+  };
 
   const allNewTopicsForDb: NewTopicRow[] = [
     ...normalizedNew,
@@ -684,6 +737,81 @@ export async function saveFullMinuteToDb(
   }
 
   return await loadFullMinute(minuteId);
+}
+
+/**
+ * Duplicates an existing minute record with all its tables, participants,
+ * topics, and signatures, assigning it the next sequential minute number automatically.
+ */
+export async function duplicateFullMinuteInDb(
+  sourceMinuteId: string,
+  operatorName?: string
+): Promise<FullMinuteBundle> {
+  const source = await loadFullMinute(sourceMinuteId);
+  const nextNumber = await getNextSequentialMinuteNumber(
+    source.minute.year,
+    source.minute.minuteNumber
+  );
+  const newMinuteId = generateSafeId('min');
+  const userDisplay = getActiveUserDisplay(operatorName);
+
+  const clonedBundle: FullMinuteBundle = {
+    minute: {
+      ...source.minute,
+      id: newMinuteId,
+      minuteNumber: nextNumber,
+      status: 'draft',
+      secretarySignature: '',
+      chairmanSignature: '',
+      createdByName: userDisplay,
+      updatedByName: userDisplay,
+      archivedAt: '',
+      archivedByName: '',
+    },
+    participants: source.participants.map((p, idx) => ({
+      ...p,
+      id: generateSafeId(`part_${idx + 1}`),
+      minuteId: newMinuteId,
+      orderIndex: idx + 1,
+    })),
+    outcomes: source.outcomes.map((o, idx) => ({
+      ...o,
+      id: generateSafeId(`out_${idx + 1}`),
+      minuteId: newMinuteId,
+      orderIndex: idx + 1,
+    })),
+    ongoingTopics: source.ongoingTopics.map((t, idx) => ({
+      ...t,
+      id: generateSafeId(`ong_${idx + 1}`),
+      minuteId: newMinuteId,
+      orderIndex: idx + 1,
+    })),
+    newTopics: source.newTopics.map((n, idx) => ({
+      ...n,
+      id: generateSafeId(`new_${idx + 1}`),
+      minuteId: newMinuteId,
+      orderIndex: idx + 1,
+    })),
+    showOngoingTable: source.showOngoingTable ?? true,
+    showNewTopicsTable: source.showNewTopicsTable ?? true,
+    customTables: (source.customTables ?? []).map((ct, cIdx) => ({
+      id: generateSafeId(`ct_${cIdx + 1}`),
+      title: ct.title,
+      rows: ct.rows.map((r, rIdx) => ({
+        ...r,
+        id: generateSafeId(`ct_row_${rIdx + 1}`),
+        orderIndex: rIdx + 1,
+      })),
+    })),
+  };
+
+  return await saveFullMinuteToDb(
+    clonedBundle,
+    false,
+    clonedBundle.minute.year,
+    clonedBundle.minute.minuteNumber,
+    userDisplay
+  );
 }
 
 /**

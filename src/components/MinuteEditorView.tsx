@@ -215,6 +215,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
           recommendations: '',
           responsiblePerson: '',
           executionDate: '',
+          status: 'قيد التنفيذ',
           ownerId: prev.minute.ownerId,
         },
       ],
@@ -389,6 +390,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             recommendationsAndDecisions: '',
             responsiblePerson: '',
             executionDate: '',
+            status: 'قيد التنفيذ',
             ownerId: prev.minute.ownerId,
           },
         ],
@@ -474,7 +476,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
         recommendationOrAction: topic.recommendationsAndDecisions,
         followUpPerson: topic.responsiblePerson,
         followUpDate: topic.executionDate,
-        topicStatus: 'مستمر - مرحّل',
+        topicStatus: topic.status || 'مستمر - مرحّل',
         sourceMinuteId: prev.minute.id,
         sourceMinuteLabel: sourceLabel,
         historyLog: `[${sourceLabel}] تم ترحيله من قسم المواضيع الجديدة | المناقشة: ${
@@ -591,6 +593,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
               recommendations: '',
               responsiblePerson: '',
               executionDate: '',
+              status: 'قيد التنفيذ',
             },
           ],
         };
@@ -691,38 +694,41 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Section 7: Top Action Control Bar (All 12 Required Buttons) */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-xs">
+      {/* Top Action Control Bar */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#101F3D] to-[#1746B8] text-[#C7A66B] flex items-center justify-center shrink-0 shadow-xs">
+              <FilePlus className="w-5 h-5" />
+            </div>
             <div>
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="flex items-center gap-2 text-xs text-[#64748B] font-medium">
                 <span>
                   {isExistingRecord ? 'تحرير محضر مسجل في قاعدة البيانات' : 'إنشاء محضر اجتماع جديد'}
                 </span>
                 <span>·</span>
-                <span className="font-mono-num">
+                <span className="font-mono-num font-bold text-[#1746B8]">
                   رقم ({formatMinuteNumber(minute.minuteNumber)}) / {minute.year}
                 </span>
                 {hasUnsavedChanges && (
                   <>
                     <span>·</span>
-                    <span className="text-amber-700 font-semibold">تغييرات غير محفوظة (محفوظة مؤقتاً محلياً)</span>
+                    <span className="text-[#D97706] font-bold">تغييرات غير محفوظة (محفوظة مؤقتاً محلياً)</span>
                   </>
                 )}
               </div>
-              <h2 className="text-base font-bold text-slate-900 mt-0.5">
+              <h2 className="text-base sm:text-lg font-extrabold text-[#101F3D] font-display mt-0.5">
                 {minute.mainSubject || `محضر اجتماع رقم (${formatMinuteNumber(minute.minuteNumber)}) لسنة ${minute.year}`}
               </h2>
             </div>
           </div>
 
-          {/* 12 Control Buttons */}
+          {/* Control Buttons */}
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={onBackToList}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-[#101F3D] bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5" />
               العودة إلى قائمة المحاضر
@@ -732,10 +738,9 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  // Reset to new minute via parent handler
                   onCancelChanges();
                 }}
-                className="px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+                className="px-3.5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 إلغاء التعديلات
@@ -744,7 +749,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
 
             {readOnly ? (
               minute.status === 'saved' && !canAuthorizeManualNumber ? (
-                <span className="px-3 py-2 text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-200 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0">
+                <span className="px-3.5 py-2 text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0">
                   <Lock className="w-3.5 h-3.5 text-amber-700" />
                   محضر معتمد — للمعاينة فقط (التعديل للمدير المخوّل)
                 </span>
@@ -752,9 +757,9 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                 <button
                   type="button"
                   onClick={onEnableEditMode}
-                  className="px-3.5 py-2 text-xs font-semibold text-white bg-blue-800 hover:bg-blue-900 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+                  className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-l from-[#1746B8] to-[#101F3D] hover:from-[#123896] hover:to-[#0C1830] rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                 >
-                  <Edit3 className="w-3.5 h-3.5" />
+                  <Edit3 className="w-3.5 h-3.5 text-[#C7A66B]" />
                   تعديل المحضر
                 </button>
               )
@@ -764,9 +769,9 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                   type="button"
                   disabled={saving}
                   onClick={onSaveDraft}
-                  className="px-3.5 py-2 text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0 disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold text-amber-950 bg-amber-50 border border-amber-300 hover:bg-amber-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 disabled:opacity-50 cursor-pointer"
                 >
-                  <Save className="w-3.5 h-3.5" />
+                  <Save className="w-3.5 h-3.5 text-[#D97706]" />
                   {saving ? 'جاري الحفظ...' : 'حفظ كمسودة'}
                 </button>
 
@@ -774,7 +779,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                   type="button"
                   disabled={saving}
                   onClick={onSaveFinal}
-                  className="px-4 py-2 text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0 disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold text-white bg-[#059669] hover:bg-emerald-700 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   <Save className="w-3.5 h-3.5" />
                   {saving ? 'جاري الاعتماد...' : 'حفظ واعتماد المحضر'}
@@ -785,25 +790,25 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             <button
               type="button"
               onClick={onPreview}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-[#101F3D] bg-[#F4F7FC] border border-slate-300 hover:bg-slate-200/70 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
-              <Eye className="w-3.5 h-3.5" />
+              <Eye className="w-3.5 h-3.5 text-[#1746B8]" />
               معاينة المحضر
             </button>
 
             <button
               type="button"
               onClick={onPrint}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-[#101F3D] bg-[#F4F7FC] border border-slate-300 hover:bg-slate-200/70 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-[#1746B8]" />
               طباعة المحضر
             </button>
 
             <button
               type="button"
               onClick={onExportPdf}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-[#059669] bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <FileDown className="w-3.5 h-3.5" />
               تصدير PDF
@@ -812,44 +817,21 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             <button
               type="button"
               onClick={onExportWord}
-              className="px-3 py-2 text-xs font-semibold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <FileDown className="w-3.5 h-3.5" />
               تصدير Word
             </button>
-
-            {isExistingRecord &&
-              canArchiveOrRestore &&
-              (minute.status !== 'saved' || canAuthorizeManualNumber) &&
-              (minute.status === 'archived' ? (
-                <button
-                  type="button"
-                  onClick={onRestore}
-                  className="px-3 py-2 text-xs font-semibold text-emerald-900 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
-                >
-                  <ArchiveRestore className="w-3.5 h-3.5" />
-                  استعادة المحضر من الأرشيف
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onArchive}
-                  className="px-3 py-2 text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
-                >
-                  <Archive className="w-3.5 h-3.5" />
-                  أرشفة المحضر
-                </button>
-              ))}
           </div>
         </div>
       </div>
 
       {/* SECTION 1: Meeting Metadata */}
-      <div className="bg-white border border-slate-200 rounded-lg p-6">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
           <div>
-            <h3 className="text-base font-bold text-slate-900">أولاً: بيانات الاجتماع</h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h3 className="text-base font-extrabold text-[#101F3D] font-display">أولاً: بيانات الاجتماع</h3>
+            <p className="text-xs text-[#64748B] mt-0.5">
               يتم اقتراح رقم المحضر التالي تلقائياً وفق التسلسل السنوي مع التحقق من عدم التكرار في قاعدة البيانات
             </p>
           </div>
@@ -857,7 +839,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             <button
               type="button"
               onClick={() => setIsImportTemplateOpen(true)}
-              className="px-3 py-1.5 text-xs font-semibold text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 text-xs font-bold text-[#1746B8] bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Upload className="w-3.5 h-3.5" />
               استيراد محضر أو قائمة الحضور حرفياً
@@ -1137,16 +1119,16 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-right border-collapse border border-slate-200">
+        <div className="overflow-x-auto rounded-xl border border-slate-200/90">
+          <table className="w-full text-right border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700">
-                <th className="py-3 px-3 border-l border-slate-200 w-12 text-center">م</th>
-                <th className="py-3 px-3 border-l border-slate-200 min-w-[200px]">الاسم</th>
-                <th className="py-3 px-3 border-l border-slate-200 min-w-[180px]">المسمى الوظيفي</th>
-                <th className="py-3 px-3 border-l border-slate-200 w-44">حالة الحضور</th>
-                <th className="py-3 px-3 border-l border-slate-200 min-w-[200px]">ملاحظات</th>
-                {!readOnly && <th className="py-3 px-3 w-28 text-center">الترتيب / حذف</th>}
+              <tr className="bg-gradient-to-l from-[#101F3D] via-[#152F61] to-[#1746B8] text-white text-xs font-bold">
+                <th className="py-3.5 px-3 border-l border-white/10 w-12 text-center">م</th>
+                <th className="py-3.5 px-3 border-l border-white/10 min-w-[200px]">الاسم</th>
+                <th className="py-3.5 px-3 border-l border-white/10 min-w-[180px]">المسمى الوظيفي</th>
+                <th className="py-3.5 px-3 border-l border-white/10 w-44">حالة الحضور</th>
+                <th className="py-3.5 px-3 border-l border-white/10 min-w-[200px]">ملاحظات</th>
+                {!readOnly && <th className="py-3.5 px-3 w-28 text-center">الترتيب / حذف</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 text-xs">
@@ -1292,22 +1274,33 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
           ))}
         </datalist>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-right border-collapse border border-slate-200">
+        <datalist id="minute-item-status-list">
+          <option value="قيد التنفيذ" />
+          <option value="تم التنفيذ" />
+          <option value="مكتمل" />
+          <option value="مستمر" />
+          <option value="قيد المتابعة" />
+          <option value="مؤجل" />
+          <option value="لم يبدأ" />
+        </datalist>
+
+        <div className="overflow-x-auto rounded-xl border border-slate-200/90">
+          <table className="w-full text-right border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700">
-                <th className="py-3 px-3 border-l border-slate-200 w-12 text-center">م</th>
-                <th className="py-3 px-3 border-l border-slate-200 min-w-[240px]">الموضوع</th>
-                <th className="py-3 px-3 border-l border-slate-200 min-w-[280px]">التوصيات</th>
-                <th className="py-3 px-3 border-l border-slate-200 w-48">مسؤولية التنفيذ</th>
-                <th className="py-3 px-3 border-l border-slate-200 w-40">تاريخ التنفيذ</th>
-                {!readOnly && <th className="py-3 px-3 w-28 text-center">إجراءات</th>}
+              <tr className="bg-gradient-to-l from-[#101F3D] via-[#152F61] to-[#1746B8] text-white text-xs font-bold">
+                <th className="py-3.5 px-3 border-l border-white/10 w-12 text-center">م</th>
+                <th className="py-3.5 px-3 border-l border-white/10 min-w-[220px]">الموضوع</th>
+                <th className="py-3.5 px-3 border-l border-white/10 min-w-[260px]">التوصيات</th>
+                <th className="py-3.5 px-3 border-l border-white/10 w-44">مسؤولية التنفيذ</th>
+                <th className="py-3.5 px-3 border-l border-white/10 w-36">تاريخ التنفيذ</th>
+                <th className="py-3.5 px-3 border-l border-white/10 w-36">الحالة</th>
+                {!readOnly && <th className="py-3.5 px-3 w-28 text-center">إجراءات</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 text-xs">
               {outcomes.length === 0 ? (
                 <tr>
-                  <td colSpan={readOnly ? 5 : 6} className="py-8 text-center text-slate-500">
+                  <td colSpan={readOnly ? 6 : 7} className="py-8 text-center text-slate-500">
                     لا توجد مدخلات أو نتائج مضافة بعد. اضغط على «إضافة موضوع وتوصيات» لإدراج بند جديد.
                   </td>
                 </tr>
@@ -1366,6 +1359,17 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                         disabled={readOnly}
                         onChange={(e) => updateOutcome(o.id, 'executionDate', e.target.value)}
                         className="w-full px-2.5 py-1.5 text-xs font-mono-num border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
+                      />
+                    </td>
+                    <td className="py-2.5 px-2.5 border-l border-slate-200">
+                      <input
+                        type="text"
+                        list="minute-item-status-list"
+                        value={o.status || ''}
+                        disabled={readOnly}
+                        onChange={(e) => updateOutcome(o.id, 'status', e.target.value)}
+                        placeholder="اختر أو اكتب الحالة..."
+                        className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
                       />
                     </td>
                     {!readOnly && (
@@ -1446,22 +1450,23 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             )}
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse border border-slate-200">
+          <div className="overflow-x-auto rounded-xl border border-slate-200/90">
+            <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700">
-                  <th className="py-3 px-3 border-l border-slate-200 w-12 text-center">م</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[240px]">الموضوع</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[280px]">التوصيات</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-48">مسؤولية التنفيذ</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-40">تاريخ التنفيذ</th>
-                  {!readOnly && <th className="py-3 px-3 w-28 text-center">إجراءات</th>}
+                <tr className="bg-gradient-to-l from-[#101F3D] via-[#152F61] to-[#1746B8] text-white text-xs font-bold">
+                  <th className="py-3.5 px-3 border-l border-white/10 w-12 text-center">م</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[220px]">الموضوع</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[260px]">التوصيات</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-44">مسؤولية التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">تاريخ التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">الحالة</th>
+                  {!readOnly && <th className="py-3.5 px-3 w-28 text-center">إجراءات</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-xs">
                 {ongoingTopics.length === 0 ? (
                   <tr>
-                    <td colSpan={readOnly ? 5 : 6} className="py-8 text-center text-slate-500">
+                    <td colSpan={readOnly ? 6 : 7} className="py-8 text-center text-slate-500">
                       لا توجد مواضيع مستمرة مسجلة. يمكنك إضافة موضوع مستمر أو استيراد موضوع من محضر اجتماع سابق.
                     </td>
                   </tr>
@@ -1543,6 +1548,17 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                             className="w-full px-2.5 py-1.5 text-xs font-mono-num border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
                           />
                         </td>
+                        <td className="py-2.5 px-2.5 border-l border-slate-200">
+                          <input
+                            type="text"
+                            list="minute-item-status-list"
+                            value={t.topicStatus || ''}
+                            disabled={readOnly}
+                            onChange={(e) => updateOngoingTopic(t.id, 'topicStatus', e.target.value)}
+                            placeholder="اختر أو اكتب الحالة..."
+                            className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
+                          />
+                        </td>
                         {!readOnly && (
                           <td className="py-2.5 px-2 text-center">
                             <div className="flex items-center justify-center gap-1">
@@ -1575,7 +1591,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                       </tr>
                       {expandedHistoryId === t.id && t.historyLog && (
                         <tr className="bg-slate-50">
-                          <td colSpan={readOnly ? 5 : 6} className="px-4 py-3 text-xs text-slate-700">
+                          <td colSpan={readOnly ? 6 : 7} className="px-4 py-3 text-xs text-slate-700">
                             <div className="font-bold text-slate-900 mb-1">
                               السجل التاريخي للموضوع في المحاضر السابقة (محفوظ دون تعديل):
                             </div>
@@ -1627,22 +1643,23 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             )}
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse border border-slate-200">
+          <div className="overflow-x-auto rounded-xl border border-slate-200/90">
+            <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700">
-                  <th className="py-3 px-3 border-l border-slate-200 w-12 text-center">م</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[240px]">الموضوع</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[280px]">التوصيات</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-48">مسؤولية التنفيذ</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-40">تاريخ التنفيذ</th>
-                  {!readOnly && <th className="py-3 px-3 w-28 text-center">إجراءات</th>}
+                <tr className="bg-gradient-to-l from-[#101F3D] via-[#152F61] to-[#1746B8] text-white text-xs font-bold">
+                  <th className="py-3.5 px-3 border-l border-white/10 w-12 text-center">م</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[220px]">الموضوع</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[260px]">التوصيات</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-44">مسؤولية التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">تاريخ التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">الحالة</th>
+                  {!readOnly && <th className="py-3.5 px-3 w-28 text-center">إجراءات</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-xs">
                 {newTopics.length === 0 ? (
                   <tr>
-                    <td colSpan={readOnly ? 5 : 6} className="py-8 text-center text-slate-500">
+                    <td colSpan={readOnly ? 6 : 7} className="py-8 text-center text-slate-500">
                       لا توجد مواضيع جديدة مضافة في هذا الاجتماع. اضغط على «إضافة موضوع جديد» لإدراج بند.
                     </td>
                   </tr>
@@ -1703,6 +1720,17 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                           disabled={readOnly}
                           onChange={(e) => updateNewTopic(n.id, 'executionDate', e.target.value)}
                           className="w-full px-2.5 py-1.5 text-xs font-mono-num border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
+                        />
+                      </td>
+                      <td className="py-2.5 px-2.5 border-l border-slate-200">
+                        <input
+                          type="text"
+                          list="minute-item-status-list"
+                          value={n.status || ''}
+                          disabled={readOnly}
+                          onChange={(e) => updateNewTopic(n.id, 'status', e.target.value)}
+                          placeholder="اختر أو اكتب الحالة..."
+                          className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
                         />
                       </td>
                       {!readOnly && (
@@ -1797,22 +1825,23 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
             )}
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse border border-slate-200">
+          <div className="overflow-x-auto rounded-xl border border-slate-200/90">
+            <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700">
-                  <th className="py-3 px-3 border-l border-slate-200 w-12 text-center">م</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[240px]">الموضوع</th>
-                  <th className="py-3 px-3 border-l border-slate-200 min-w-[280px]">التوصيات</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-48">مسؤولية التنفيذ</th>
-                  <th className="py-3 px-3 border-l border-slate-200 w-40">تاريخ التنفيذ</th>
-                  {!readOnly && <th className="py-3 px-3 w-28 text-center">إجراءات</th>}
+                <tr className="bg-gradient-to-l from-[#101F3D] via-[#152F61] to-[#1746B8] text-white text-xs font-bold">
+                  <th className="py-3.5 px-3 border-l border-white/10 w-12 text-center">م</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[220px]">الموضوع</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 min-w-[260px]">التوصيات</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-44">مسؤولية التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">تاريخ التنفيذ</th>
+                  <th className="py-3.5 px-3 border-l border-white/10 w-36">الحالة</th>
+                  {!readOnly && <th className="py-3.5 px-3 w-28 text-center">إجراءات</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-xs">
                 {ct.rows.length === 0 ? (
                   <tr>
-                    <td colSpan={readOnly ? 5 : 6} className="py-8 text-center text-slate-500">
+                    <td colSpan={readOnly ? 6 : 7} className="py-8 text-center text-slate-500">
                       لا توجد بنود مضافة في هذا الجدول بعد. اضغط على «إضافة موضوع وتوصيات» لإدراج بند جديد.
                     </td>
                   </tr>
@@ -1881,6 +1910,19 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
                           className="w-full px-2.5 py-1.5 text-xs font-mono-num border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
                         />
                       </td>
+                      <td className="py-2.5 px-2.5 border-l border-slate-200">
+                        <input
+                          type="text"
+                          list="minute-item-status-list"
+                          value={r.status || ''}
+                          disabled={readOnly}
+                          onChange={(e) =>
+                            updateCustomTableRow(ct.id, r.id, 'status', e.target.value)
+                          }
+                          placeholder="اختر أو اكتب الحالة..."
+                          className="w-full px-2.5 py-1.5 text-xs border border-slate-200 rounded focus:outline-none focus:border-blue-700 disabled:bg-transparent"
+                        />
+                      </td>
                       {!readOnly && (
                         <td className="py-2.5 px-2 text-center">
                           <div className="flex items-center justify-center gap-1">
@@ -1925,7 +1967,7 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
           <div className="space-y-1">
             <h4 className="text-sm font-bold text-slate-900">إدارة وإضافة جداول المحضر</h4>
             <p className="text-xs text-slate-600">
-              يمكنك إضافة جدول جديد بنفس هيكل الأعمدة المعتمد (م، الموضوع، التوصيات، مسؤولية التنفيذ، تاريخ التنفيذ) أو استعادة الجداول المحذوفة
+              يمكنك إضافة جدول جديد بنفس هيكل الأعمدة المعتمد (م، الموضوع، التوصيات، مسؤولية التنفيذ، تاريخ التنفيذ، الحالة) أو استعادة الجداول المحذوفة
             </p>
           </div>
 

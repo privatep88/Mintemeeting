@@ -21,6 +21,7 @@ export interface OutcomeRow {
   recommendations: string; // Supports multiple recommendations separated by newline or bullet items
   responsiblePerson: string;
   executionDate: string;
+  status?: string;
   ownerId: string;
 }
 
@@ -51,6 +52,7 @@ export interface NewTopicRow {
   recommendationsAndDecisions: string;
   responsiblePerson: string;
   executionDate: string;
+  status?: string;
   ownerId: string;
 }
 
@@ -87,6 +89,7 @@ export interface CustomTableRow {
   recommendations: string;
   responsiblePerson: string;
   executionDate: string;
+  status?: string;
 }
 
 export interface CustomTableSection {
