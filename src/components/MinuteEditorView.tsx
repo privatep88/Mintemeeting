@@ -814,14 +814,16 @@ export const MinuteEditorView: React.FC<MinuteEditorViewProps> = ({
               تصدير PDF
             </button>
 
-            <button
-              type="button"
-              onClick={onExportWord}
-              className="px-3.5 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              <FileDown className="w-3.5 h-3.5" />
-              تصدير Word
-            </button>
+            {canAuthorizeManualNumber && (
+              <button
+                type="button"
+                onClick={onExportWord}
+                className="px-3.5 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <FileDown className="w-3.5 h-3.5" />
+                تصدير Word
+              </button>
+            )}
           </div>
         </div>
       </div>

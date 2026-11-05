@@ -418,7 +418,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               <div className="flex flex-col items-center text-center mb-5">
                 <div className="flex items-center justify-center gap-3 mb-3">
                   <img
-                    src="/assets/aistudio/logo_1afd1154.png"
+                    src={`${import.meta.env.BASE_URL}assets/aistudio/logo_1afd1154.png`}
                     alt="SAAED Logo"
                     referrerPolicy="no-referrer"
                     className="h-12 sm:h-14 object-contain drop-shadow-xs"

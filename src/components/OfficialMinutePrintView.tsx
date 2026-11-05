@@ -48,7 +48,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
 
         <div className="text-center">
           <img
-            src="/assets/aistudio/logo_1afd1154.png"
+            src={`${import.meta.env.BASE_URL}assets/aistudio/logo_1afd1154.png`}
             alt="شعار ساعد SAAED"
             referrerPolicy="no-referrer"
             className="h-16 object-contain mx-auto"

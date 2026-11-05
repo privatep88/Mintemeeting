@@ -1117,7 +1117,7 @@ export default function App() {
             className="flex items-center gap-3 shrink-0 group py-2"
           >
             <img
-              src="/assets/aistudio/logo_1afd1154.png"
+              src={`${import.meta.env.BASE_URL}assets/aistudio/logo_1afd1154.png`}
               alt="شعار ساعد"
               referrerPolicy="no-referrer"
               className="h-9 sm:h-10 object-contain transition-transform duration-200 group-hover:scale-[1.02]"
@@ -1205,14 +1205,16 @@ export default function App() {
 
           {/* Zone 3 (Left in RTL): Primary CTA Button */}
           <div className="flex items-center gap-3 shrink-0">
-            <button
-              type="button"
-              onClick={() => guardedNavigate(startNewMinute)}
-              className="px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-l from-[#1746B8] to-[#102C73] hover:from-[#123896] hover:to-[#0C2157] rounded-xl shadow-sm transition-all flex items-center gap-2 whitespace-nowrap shrink-0 border border-[#2878E3]/40 cursor-pointer"
-            >
-              <FilePlus className="w-4 h-4 text-[#C7A66B]" />
-              <span>محضر جديد</span>
-            </button>
+            {canEdit && (
+              <button
+                type="button"
+                onClick={() => guardedNavigate(startNewMinute)}
+                className="px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-l from-[#1746B8] to-[#102C73] hover:from-[#123896] hover:to-[#0C2157] rounded-xl shadow-sm transition-all flex items-center gap-2 whitespace-nowrap shrink-0 border border-[#2878E3]/40 cursor-pointer"
+              >
+                <FilePlus className="w-4 h-4 text-[#C7A66B]" />
+                <span>محضر جديد</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -1821,32 +1823,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* KPI Card 4 (White Executive Card): Participants Count */}
-              <div
-                onClick={() => guardedNavigate(() => setActiveTab('directory'))}
-                className={`bg-white rounded-2xl p-5 border transition-all cursor-pointer group hover:-translate-y-0.5 hover:shadow-md ${
-                  activeTab === 'directory'
-                    ? 'border-[#1746B8] ring-2 ring-[#1746B8]/10 shadow-sm'
-                    : 'border-slate-200/90 shadow-xs'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-bold text-[#101F3D]">عدد المشاركين</p>
-                    <p className="text-3xl font-extrabold font-mono-num text-[#101F3D] mt-1">
-                      {participantsDirectoryCount}
-                    </p>
-                    <p className="text-[11px] font-semibold text-[#059669] mt-1.5 flex items-center gap-1">
-                      <span>▲ مسجلون في سجل المشاركين</span>
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-[#F4F7FC] border border-slate-200 flex items-center justify-center shrink-0 text-[#1746B8] group-hover:bg-[#1746B8] group-hover:text-white transition-colors">
-                    <Users className="w-6 h-6" />
-                  </div>
-                </div>
-              </div>
-
-              {/* KPI Card 5 (White Executive Card): Completed Topics */}
+              {/* KPI Card 4 (White Executive Card): Completed Topics */}
               <div
                 onClick={() => guardedNavigate(() => setActiveTab('completed_topics'))}
                 className={`bg-white rounded-2xl p-5 border transition-all cursor-pointer group hover:-translate-y-0.5 hover:shadow-md ${
@@ -1870,6 +1847,31 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {/* KPI Card 5 (White Executive Card): Participants Count */}
+              <div
+                onClick={() => guardedNavigate(() => setActiveTab('directory'))}
+                className={`bg-white rounded-2xl p-5 border transition-all cursor-pointer group hover:-translate-y-0.5 hover:shadow-md ${
+                  activeTab === 'directory'
+                    ? 'border-[#1746B8] ring-2 ring-[#1746B8]/10 shadow-sm'
+                    : 'border-slate-200/90 shadow-xs'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold text-[#101F3D]">عدد المشاركين</p>
+                    <p className="text-3xl font-extrabold font-mono-num text-[#101F3D] mt-1">
+                      {participantsDirectoryCount}
+                    </p>
+                    <p className="text-[11px] font-semibold text-[#059669] mt-1.5 flex items-center gap-1">
+                      <span>▲ مسجلون في سجل المشاركين</span>
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-[#F4F7FC] border border-slate-200 flex items-center justify-center shrink-0 text-[#1746B8] group-hover:bg-[#1746B8] group-hover:text-white transition-colors">
+                    <Users className="w-6 h-6" />
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
         )}
@@ -1879,6 +1881,7 @@ export default function App() {
             minutes={allMinutes}
             loading={loadingMinutes}
             canEdit={canEdit}
+            isAuthorizedAdmin={isAuthorizedAdmin}
             onCreateNew={startNewMinute}
             onOpenApprovedTab={() => setActiveTab('approved_list')}
             onViewDetails={(id) => openMinuteFromDb(id, 'view')}
@@ -2070,7 +2073,9 @@ export default function App() {
                 </div>
                 <div>
                   <h2 className="text-base font-extrabold text-[#101F3D] font-display">
-                    معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF / Word)
+                    {isAuthorizedAdmin
+                      ? 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF / Word)'
+                      : 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF)'}
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
                     مقاس A4 عمودي (210 × 297 مم) — الاسم الافتراضي للملف:{' '}
@@ -2091,16 +2096,18 @@ export default function App() {
                       <ArrowRight className="w-3.5 h-3.5" />
                       العودة إلى المحاضر المعتمدة
                     </button>
-                    <button
-                      type="button"
-                      disabled={duplicatingId === currentBundle.minute.id}
-                      onClick={() => handleDuplicateMinute(currentBundle.minute.id)}
-                      className="px-3.5 py-2 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-300 hover:bg-teal-100 rounded-xl flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                      title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
-                    >
-                      <Copy className="w-3.5 h-3.5 text-teal-700" />
-                      {duplicatingId === currentBundle.minute.id ? 'جاري النسخ...' : 'تكرار ونسخ المحضر'}
-                    </button>
+                    {isAuthorizedAdmin && (
+                      <button
+                        type="button"
+                        disabled={duplicatingId === currentBundle.minute.id}
+                        onClick={() => handleDuplicateMinute(currentBundle.minute.id)}
+                        className="px-3.5 py-2 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-300 hover:bg-teal-100 rounded-xl flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
+                      >
+                        <Copy className="w-3.5 h-3.5 text-teal-700" />
+                        {duplicatingId === currentBundle.minute.id ? 'جاري النسخ...' : 'تكرار ونسخ المحضر'}
+                      </button>
+                    )}
                     {isAuthorizedAdmin ? (
                       <button
                         type="button"
@@ -2157,17 +2164,19 @@ export default function App() {
                   <FileDown className="w-3.5 h-3.5 text-emerald-800" />
                   تصدير PDF
                 </button>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await exportMinuteToDocx(currentBundle);
-                    showToast('success', 'تم تصدير ملف Word (DOCX) بنجاح.');
-                  }}
-                  className="px-4 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 cursor-pointer"
-                >
-                  <FileDown className="w-3.5 h-3.5" />
-                  تصدير Word (DOCX)
-                </button>
+                {isAuthorizedAdmin && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await exportMinuteToDocx(currentBundle);
+                      showToast('success', 'تم تصدير ملف Word (DOCX) بنجاح.');
+                    }}
+                    className="px-4 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <FileDown className="w-3.5 h-3.5" />
+                    تصدير Word (DOCX)
+                  </button>
+                )}
               </div>
             </div>
 

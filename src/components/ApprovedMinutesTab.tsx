@@ -287,17 +287,19 @@ export const ApprovedMinutesTab: React.FC<ApprovedMinutesTabProps> = ({
                           <span>معاينة المحضر</span>
                         </button>
 
-                        {/* Duplicate & Copy Minute with Auto-Next Number */}
-                        <button
-                          type="button"
-                          disabled={duplicatingId === m.id}
-                          onClick={() => onDuplicateMinute(m.id)}
-                          className="px-2.5 py-1.5 text-[11px] font-bold text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-50"
-                          title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
-                        >
-                          <Copy className="w-3.5 h-3.5 text-teal-700" />
-                          <span>{duplicatingId === m.id ? 'جاري النسخ...' : 'تكرار ونسخ'}</span>
-                        </button>
+                        {/* Duplicate & Copy Minute with Auto-Next Number (Restricted from Regular Users) */}
+                        {isAuthorizedAdmin && (
+                          <button
+                            type="button"
+                            disabled={duplicatingId === m.id}
+                            onClick={() => onDuplicateMinute(m.id)}
+                            className="px-2.5 py-1.5 text-[11px] font-bold text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-50"
+                            title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
+                          >
+                            <Copy className="w-3.5 h-3.5 text-teal-700" />
+                            <span>{duplicatingId === m.id ? 'جاري النسخ...' : 'تكرار ونسخ'}</span>
+                          </button>
+                        )}
 
                         <button
                           type="button"
@@ -319,15 +321,17 @@ export const ApprovedMinutesTab: React.FC<ApprovedMinutesTabProps> = ({
                           <span>PDF</span>
                         </button>
 
-                        <button
-                          type="button"
-                          onClick={() => onExportWord(m.id)}
-                          className="px-2.5 py-1.5 text-[11px] font-bold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer"
-                          title="تصدير Word DOCX"
-                        >
-                          <FileDown className="w-3 h-3" />
-                          <span>Word</span>
-                        </button>
+                        {isAuthorizedAdmin && (
+                          <button
+                            type="button"
+                            onClick={() => onExportWord(m.id)}
+                            className="px-2.5 py-1.5 text-[11px] font-bold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer"
+                            title="تصدير Word DOCX"
+                          >
+                            <FileDown className="w-3 h-3" />
+                            <span>Word</span>
+                          </button>
+                        )}
 
                         {/* Strictly restricted to Authorized Admin (مدير مخول - كامل الصلاحيات) */}
                         {isAuthorizedAdmin ? (

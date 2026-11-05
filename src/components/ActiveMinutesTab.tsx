@@ -28,6 +28,7 @@ interface ActiveMinutesTabProps {
   minutes: MinuteRecord[];
   loading: boolean;
   canEdit: boolean;
+  isAuthorizedAdmin?: boolean;
   onCreateNew: () => void;
   onOpenApprovedTab: () => void;
   onViewDetails: (minuteId: string) => void;
@@ -44,6 +45,7 @@ export const ActiveMinutesTab: React.FC<ActiveMinutesTabProps> = ({
   minutes,
   loading,
   canEdit,
+  isAuthorizedAdmin = false,
   onCreateNew,
   onOpenApprovedTab,
   onViewDetails,
@@ -340,15 +342,17 @@ export const ActiveMinutesTab: React.FC<ActiveMinutesTabProps> = ({
                           <FileDown className="w-3 h-3" />
                           <span>PDF</span>
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => onExportWord(m.id)}
-                          className="px-2.5 py-1.5 text-[11px] font-bold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
-                          title="تصدير Word DOCX قابل للتحرير"
-                        >
-                          <FileDown className="w-3 h-3" />
-                          <span>Word</span>
-                        </button>
+                        {isAuthorizedAdmin && (
+                          <button
+                            type="button"
+                            onClick={() => onExportWord(m.id)}
+                            className="px-2.5 py-1.5 text-[11px] font-bold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
+                            title="تصدير Word DOCX قابل للتحرير"
+                          >
+                            <FileDown className="w-3 h-3" />
+                            <span>Word</span>
+                          </button>
+                        )}
                         {canEdit && (
                           <button
                             type="button"
