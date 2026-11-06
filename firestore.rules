@@ -296,5 +296,9 @@ service cloud.firestore {
         (isAdmin() || (isAuthorizedWorkspaceOwner(existing().ownerId) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'jobTitle', 'department'])));
       allow delete: if isValidId(employeeId) && (resource == null || isAuthorizedWorkspaceOwner(existing().ownerId) || isAdmin());
     }
+
+    match /test/{testId} {
+      allow get: if isValidId(testId);
+    }
   }
 }

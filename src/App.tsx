@@ -75,7 +75,8 @@ import {
 } from './components/LoginPage';
 import heroBoardroomImg from './assets/images/saaed_target_boardroom_scene_1793880520448.jpg';
 import archiveHeaderImg from './assets/images/saaed_digital_archiving_header_1793877730074.jpg';
-import deskWorkspaceImg from './assets/images/saaed_executive_desk_workspace_1793977208522.jpg';
+import deskLeftNotebookImg from './assets/images/saaed_desk_left_notebook.png';
+import deskRightAccessoriesImg from './assets/images/saaed_desk_right_accessories.png';
 
 type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics' | 'directory' | 'preview';
 
@@ -2132,27 +2133,16 @@ export default function App() {
             </section>
 
             {/* Layer 05, 06 & 07: Executive Desk Workspace, Document Action Toolbar & Centered Document */}
-            <div className="print-preview-workspace relative w-full bg-gradient-to-b from-[#DCE6F2] via-[#E9F0F8] to-[#D8E3F0] pt-5 sm:pt-6 pb-10 sm:pb-14">
-              {/* Layer 06: Decorative Executive Desk Scene (Left Notebook/Pen & Right Pen Holder/Water/Plant — Screen Only) */}
+            <div className="print-preview-workspace relative w-full bg-gradient-to-b from-[#DCE6F2] via-[#E9F0F8] to-[#D8E3F0] pt-5 sm:pt-6 pb-10 sm:pb-14 overflow-x-clip">
+              {/* Layer 06: Soft Ambient Executive Desk Lighting Layer (Screen Only) */}
               <div
                 aria-hidden="true"
-                className="no-print hidden lg:block absolute inset-0 pointer-events-none select-none overflow-hidden"
-              >
-                <img
-                  src={deskWorkspaceImg}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center opacity-90"
-                />
-                {/* Soft center radial fade so the document sits on a clean surface while keeping side desk accessories crisp */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      'radial-gradient(ellipse 42% 85% at 50% 52%, rgba(235, 242, 250, 0.90) 0%, rgba(226, 236, 247, 0.60) 62%, rgba(212, 225, 242, 0.15) 100%)',
-                  }}
-                />
-              </div>
+                className="no-print absolute inset-0 pointer-events-none select-none"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 65% 85% at 50% 48%, rgba(245, 249, 255, 0.85) 0%, rgba(228, 237, 248, 0.50) 65%, rgba(212, 225, 242, 0.15) 100%)',
+                }}
+              />
 
               {/* Layer 05: Document Action Toolbar (~975px width, positioned cleanly below Hero Section — Screen Only) */}
               <div className="no-print relative z-30 mt-0 mx-auto max-w-[975px] w-[94%]">
@@ -2284,9 +2274,50 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Layer 07: Centered Official Minutes Document Sheet (~735px visual width on screen, full A4 in print/PDF) */}
+              {/* Layer 07: Centered Official Minutes Document Sheet Flanked by Reference Desk Accessories */}
               <div className="relative z-10 mt-4 px-3 sm:px-6">
-                <OfficialMinutePrintView bundle={currentBundle} />
+                <div className="relative max-w-[735px] w-full mx-auto">
+                  {/* Left Desk Accessories: Luxury Executive Leather Notebook (SAAED Embossed Logo & Gold Fountain Pen) */}
+                  <div
+                    aria-hidden="true"
+                    className="no-print hidden lg:block absolute pointer-events-none select-none z-0"
+                    style={{
+                      width: '235px',
+                      height: '755px',
+                      right: 'calc(100% - 10px)',
+                      top: '180px',
+                    }}
+                  >
+                    <img
+                      src={deskLeftNotebookImg}
+                      alt="دفتر اجتماعات تنفيذي وقلم فاخر — ساعد"
+                      className="w-full h-auto object-contain drop-shadow-[0_4px_14px_rgba(15,28,55,0.10)]"
+                    />
+                  </div>
+
+                  {/* Right Desk Accessories: SAAED Dark Metallic Pen Holder & Faceted Glass of Water */}
+                  <div
+                    aria-hidden="true"
+                    className="no-print hidden lg:block absolute pointer-events-none select-none z-0"
+                    style={{
+                      width: '234px',
+                      height: '730px',
+                      left: 'calc(100% - 10px)',
+                      top: '10px',
+                    }}
+                  >
+                    <img
+                      src={deskRightAccessoriesImg}
+                      alt="حامل أقلام تنفيذي وكأس ماء — ساعد"
+                      className="w-full h-auto object-contain drop-shadow-[0_4px_14px_rgba(15,28,55,0.10)]"
+                    />
+                  </div>
+
+                  {/* The Official Document with Natural Drop Shadow */}
+                  <div className="relative z-10">
+                    <OfficialMinutePrintView bundle={currentBundle} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
