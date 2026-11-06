@@ -83,7 +83,8 @@
   #root,
   .print-root-wrapper,
   .print-main-wrapper,
-  .print-preview-wrapper {
+  .print-preview-wrapper,
+  .print-preview-workspace {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -91,6 +92,8 @@
     height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
     overflow: visible !important;
     background: #ffffff !important;
     color: #0f172a !important;

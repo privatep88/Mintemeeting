@@ -27,6 +27,7 @@ import {
   FileEdit,
   Plus,
   LogOut,
+  Briefcase,
 } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import {
@@ -55,7 +56,7 @@ import {
   removeEmployeeFromDirectory,
 } from './services/minutesService';
 import { exportMinuteToDocx } from './utils/docxExport';
-import { formatMinuteNumber } from './utils/numerals';
+import { formatMinuteNumber, toArabicNumerals } from './utils/numerals';
 import {
   getOfficialMinuteFileBaseName,
   triggerOfficialMinutePrint,
@@ -74,6 +75,7 @@ import {
 } from './components/LoginPage';
 import heroBoardroomImg from './assets/images/saaed_target_boardroom_scene_1793880520448.jpg';
 import archiveHeaderImg from './assets/images/saaed_digital_archiving_header_1793877730074.jpg';
+import deskWorkspaceImg from './assets/images/saaed_executive_desk_workspace_1793977208522.jpg';
 
 type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics' | 'directory' | 'preview';
 
@@ -1462,7 +1464,13 @@ export default function App() {
       )}
 
       {/* Main Content Area (Opens Directly Without Any Login Page) */}
-      <main className="print-main-wrapper flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
+      <main
+        className={`print-main-wrapper flex-1 w-full mx-auto ${
+          activeTab === 'preview'
+            ? 'max-w-none px-0 py-0'
+            : 'max-w-[1440px] px-4 sm:px-8 py-6 space-y-6'
+        }`}
+      >
         {/* Executive Hero Banner & Live KPI Strip (Shown on Main Dashboard Tabs, Hidden in Print) */}
         {showDashboardHeroAndKpis && (
           <div className="no-print space-y-6">
@@ -2079,123 +2087,208 @@ export default function App() {
             </div>
           </div>
         ) : activeTab === 'preview' ? (
-          /* Official Print & PDF Preview Mode */
-          <div className="print-preview-wrapper space-y-6">
-            <div className="no-print bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-[#101F3D] text-[#C7A66B] flex items-center justify-center shrink-0">
-                  <Printer className="w-5 h-5" />
-                </div>
-                <div>
-                  <h2 className="text-base font-extrabold text-[#101F3D] font-display">
-                    {isAuthorizedAdmin
-                      ? 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF / Word)'
-                      : 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF)'}
+          /* Official Print & PDF Preview Mode — Pixel-Accurate Executive Workspace */
+          <div className="print-preview-wrapper w-full space-y-0">
+            {/* Layer 03 & 04: Panoramic Executive Meeting Room Hero Banner & Right-Side Text Overlay (Screen Only) */}
+            <section
+              aria-label="معاينة محضر الاجتماع"
+              className="no-print relative w-full overflow-hidden border-b border-[#1E3A6D]/50 bg-[#091B3D] h-[185px] sm:h-[200px] flex items-center select-text"
+            >
+              <img
+                src={heroBoardroomImg}
+                alt="قاعة الاجتماعات التنفيذية — ساعد"
+                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover object-[center_52%] select-none pointer-events-none"
+              />
+              {/* Right-to-left navy gradient behind text keeping boardroom table visible on the left */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    'linear-gradient(270deg, rgba(9, 27, 61, 0.90) 0%, rgba(13, 35, 76, 0.85) 45%, rgba(13, 35, 76, 0.28) 72%, rgba(9, 27, 61, 0.12) 100%)',
+                }}
+              />
+              <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#091B3D]/65 to-transparent pointer-events-none" />
+
+              {/* Real Selectable HTML Text Positioned on the Right Side (Matching Reference) */}
+              <div className="relative z-20 max-w-[1169px] w-full mx-auto px-4 sm:px-8 py-4 flex justify-center md:justify-start">
+                <div className="w-full max-w-[540px] md:mr-14 lg:mr-20 text-center select-text">
+                  <h1 className="text-[26px] sm:text-[32px] font-extrabold text-white font-display tracking-tight leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] select-text">
+                    معاينة محضر الاجتماع
+                  </h1>
+                  <h2
+                    className="text-[18px] sm:text-[22px] font-bold text-white mt-0.5 tracking-wide leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)] select-text"
+                    dir="ltr"
+                  >
+                    Meeting Minutes Preview
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    مقاس A4 عمودي (210 × 297 مم) — الاسم الافتراضي للملف:{' '}
-                    <span className="font-mono-num font-bold text-[#1746B8]" dir="ltr">
-                      {getOfficialMinuteFileBaseName(currentBundle)}.pdf
-                    </span>
+                  {/* Subtle glowing horizontal divider */}
+                  <div className="w-64 sm:w-[410px] max-w-full h-[1px] mx-auto my-2 bg-gradient-to-r from-transparent via-[#7FB3FF] to-transparent opacity-95" />
+                  <p className="text-[11.5px] sm:text-[12.5px] font-semibold text-slate-100 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] select-text">
+                    منصة مؤسسية متكاملة لعرض المحاضر الرسمية وإدارتها واعتمادها وأرشفتها
                   </p>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {currentBundle.minute.status === 'saved' ? (
-                  <>
+            </section>
+
+            {/* Layer 05, 06 & 07: Executive Desk Workspace, Document Action Toolbar & Centered Document */}
+            <div className="print-preview-workspace relative w-full bg-gradient-to-b from-[#DCE6F2] via-[#E9F0F8] to-[#D8E3F0] pt-5 sm:pt-6 pb-10 sm:pb-14">
+              {/* Layer 06: Decorative Executive Desk Scene (Left Notebook/Pen & Right Pen Holder/Water/Plant — Screen Only) */}
+              <div
+                aria-hidden="true"
+                className="no-print hidden lg:block absolute inset-0 pointer-events-none select-none overflow-hidden"
+              >
+                <img
+                  src={deskWorkspaceImg}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center opacity-90"
+                />
+                {/* Soft center radial fade so the document sits on a clean surface while keeping side desk accessories crisp */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse 42% 85% at 50% 52%, rgba(235, 242, 250, 0.90) 0%, rgba(226, 236, 247, 0.60) 62%, rgba(212, 225, 242, 0.15) 100%)',
+                  }}
+                />
+              </div>
+
+              {/* Layer 05: Document Action Toolbar (~975px width, positioned cleanly below Hero Section — Screen Only) */}
+              <div className="no-print relative z-30 mt-0 mx-auto max-w-[975px] w-[94%]">
+                <div className="bg-white border border-[#D3E0EF] rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_12px_30px_-6px_rgba(9,27,61,0.18)] space-y-3">
+                  {/* Top Row: Document Title & Metadata */}
+                  <div className="flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-[#10264D] to-[#091B3D] text-[#C7A66B] border border-[#C7A66B]/35 shadow-2xs flex items-center justify-center shrink-0">
+                        <Briefcase className="w-4 h-4" />
+                      </div>
+                      <div className="text-right">
+                        <h2 className="text-[13px] sm:text-[14px] font-extrabold text-[#10264D] font-display leading-snug">
+                          {isAuthorizedAdmin
+                            ? 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF / Word)'
+                            : 'معاينة المحضر الرسمية (مطابقة للطباعة وتصدير PDF)'}
+                        </h2>
+                        <p className="text-[11px] text-[#60718A] mt-0.5 font-medium leading-relaxed">
+                          (مقاس الورق 210 × 297 مم) — الملف:{' '}
+                          <span className="font-mono-num font-bold text-[#1647A4]" dir="ltr">
+                            {getOfficialMinuteFileBaseName(currentBundle)}.pdf
+                          </span>
+                          {' '}— بتاريخ:{' '}
+                          <span className="font-mono-num font-bold text-[#172640]">
+                            {toArabicNumerals(currentBundle.minute.date) || '-'}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Row: All Original Action Buttons Preserved with Reference Styling */}
+                  <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2 pt-1 border-t border-[#EDF2F9]">
+                    {currentBundle.minute.status === 'saved' ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('approved_list')}
+                          className="h-[34px] px-3.5 text-[11.5px] font-bold text-[#172640] bg-[#EEF3FA] hover:bg-[#DCEBFA]/85 border border-[#CBD8EA] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs whitespace-nowrap"
+                        >
+                          <ArrowRight className="w-3.5 h-3.5 text-[#172640]" />
+                          العودة إلى المحاضر المعتمدة
+                        </button>
+                        {isAuthorizedAdmin && (
+                          <button
+                            type="button"
+                            disabled={duplicatingId === currentBundle.minute.id}
+                            onClick={() => handleDuplicateMinute(currentBundle.minute.id)}
+                            className="h-[34px] px-3.5 text-[11.5px] font-bold text-[#0E6F53] bg-gradient-to-b from-[#EBF9F4] to-[#D7F3E9] hover:from-[#D7F3E9] hover:to-[#C2ECDD] border border-[#9FE0CB] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-2xs whitespace-nowrap"
+                            title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
+                          >
+                            <Copy className="w-3.5 h-3.5 text-[#13A87B]" />
+                            {duplicatingId === currentBundle.minute.id ? 'جاري النسخ...' : 'تكرار ونسخ المحضر'}
+                          </button>
+                        )}
+                        {isAuthorizedAdmin ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReadOnlyMode(false);
+                              setActiveTab('editor');
+                            }}
+                            className="h-[34px] px-3.5 text-[11.5px] font-bold text-[#1647A4] bg-gradient-to-b from-[#EBF3FF] to-[#DCEBFA] hover:from-[#DCEBFA] hover:to-[#C8DDF6] border border-[#B6C9E2] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs whitespace-nowrap"
+                          >
+                            <Users className="w-3.5 h-3.5 text-[#1647A4]" />
+                            تحرير المحضر (للمدير المخوّل)
+                          </button>
+                        ) : (
+                          <span className="h-[34px] px-3 text-[11.5px] font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-[9px] flex items-center gap-1.5 whitespace-nowrap">
+                            <Lock className="w-3.5 h-3.5 text-amber-700" />
+                            محضر معتمد — قابل للمعاينة فقط
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('editor')}
+                        className="h-[34px] px-3.5 text-[11.5px] font-bold text-[#172640] bg-[#EEF3FA] hover:bg-[#DCEBFA]/85 border border-[#CBD8EA] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs whitespace-nowrap"
+                      >
+                        <ArrowRight className="w-3.5 h-3.5 text-[#172640]" />
+                        العودة إلى تحرير المحضر
+                      </button>
+                    )}
+
                     <button
                       type="button"
-                      onClick={() => setActiveTab('approved_list')}
-                      className="px-3.5 py-2 text-xs font-bold text-[#101F3D] bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center gap-1.5 cursor-pointer"
+                      onClick={() => {
+                        void triggerOfficialMinutePrint(currentBundle);
+                      }}
+                      className="h-[34px] px-4 text-[11.5px] font-bold text-white bg-gradient-to-b from-[#1E56B8] to-[#0F2F6B] hover:from-[#18489E] hover:to-[#0B2352] border border-[#143B82] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-xs whitespace-nowrap"
                     >
-                      <ArrowRight className="w-3.5 h-3.5" />
-                      العودة إلى المحاضر المعتمدة
+                      <Printer className="w-3.5 h-3.5 text-[#E5CFA0]" />
+                      طباعة المحضر
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await exportMinuteToPdf(currentBundle);
+                          showToast(
+                            'success',
+                            `تم تصدير ملف PDF للمحضر رقم (${formatMinuteNumber(currentBundle.minute.minuteNumber)}) بالاسم (${getOfficialMinuteFileBaseName(currentBundle)}.pdf) بنجاح.`
+                          );
+                        } catch (err) {
+                          showToast('error', err instanceof Error ? err.message : 'تعذر تصدير ملف PDF.');
+                        }
+                      }}
+                      className="h-[34px] px-4 text-[11.5px] font-bold text-[#0B5D44] bg-gradient-to-b from-[#CCF5E7] to-[#B0EBD7] hover:from-[#BCEFDE] hover:to-[#9CE2CA] border border-[#84D6BC] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs whitespace-nowrap"
+                    >
+                      <FileDown className="w-3.5 h-3.5 text-[#0D6E52]" />
+                      تصدير PDF
+                    </button>
+
                     {isAuthorizedAdmin && (
                       <button
                         type="button"
-                        disabled={duplicatingId === currentBundle.minute.id}
-                        onClick={() => handleDuplicateMinute(currentBundle.minute.id)}
-                        className="px-3.5 py-2 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-300 hover:bg-teal-100 rounded-xl flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                        title="تكرار ونسخ المحضر وإعطاؤه رقم المحضر الجديد التالي تلقائياً"
-                      >
-                        <Copy className="w-3.5 h-3.5 text-teal-700" />
-                        {duplicatingId === currentBundle.minute.id ? 'جاري النسخ...' : 'تكرار ونسخ المحضر'}
-                      </button>
-                    )}
-                    {isAuthorizedAdmin ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setReadOnlyMode(false);
-                          setActiveTab('editor');
+                        onClick={async () => {
+                          await exportMinuteToDocx(currentBundle);
+                          showToast('success', 'تم تصدير ملف Word (DOCX) بنجاح.');
                         }}
-                        className="px-3.5 py-2 text-xs font-bold text-[#1746B8] bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-xl flex items-center gap-1.5 cursor-pointer"
+                        className="h-[34px] px-4 text-[11.5px] font-bold text-[#1647A4] bg-gradient-to-b from-[#E8F0FE] to-[#D4E3FC] hover:from-[#D8E6FD] hover:to-[#C0D6FA] border border-[#B6C9E2] rounded-[9px] flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs whitespace-nowrap"
                       >
-                        تحرير المحضر (للمدير المخوّل)
+                        <FileDown className="w-3.5 h-3.5 text-[#1647A4]" />
+                        تصدير Word (DOCX)
                       </button>
-                    ) : (
-                      <span className="px-3 py-2 text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-amber-700" />
-                        محضر معتمد — قابل للمعاينة فقط
-                      </span>
                     )}
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('editor')}
-                    className="px-3.5 py-2 text-xs font-bold text-[#101F3D] bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <ArrowRight className="w-3.5 h-3.5" />
-                    العودة إلى تحرير المحضر
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    void triggerOfficialMinutePrint(currentBundle);
-                  }}
-                  className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-l from-[#1746B8] to-[#101F3D] hover:from-[#123896] hover:to-[#0C1830] rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs"
-                >
-                  <Printer className="w-3.5 h-3.5 text-[#C7A66B]" />
-                  طباعة المحضر
-                </button>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await exportMinuteToPdf(currentBundle);
-                      showToast(
-                        'success',
-                        `تم تصدير ملف PDF للمحضر رقم (${formatMinuteNumber(currentBundle.minute.minuteNumber)}) بالاسم (${getOfficialMinuteFileBaseName(currentBundle)}.pdf) بنجاح.`
-                      );
-                    } catch (err) {
-                      showToast('error', err instanceof Error ? err.message : 'تعذر تصدير ملف PDF.');
-                    }
-                  }}
-                  className="px-4 py-2 text-xs font-bold text-emerald-900 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 rounded-xl flex items-center gap-1.5 cursor-pointer"
-                >
-                  <FileDown className="w-3.5 h-3.5 text-emerald-800" />
-                  تصدير PDF
-                </button>
-                {isAuthorizedAdmin && (
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await exportMinuteToDocx(currentBundle);
-                      showToast('success', 'تم تصدير ملف Word (DOCX) بنجاح.');
-                    }}
-                    className="px-4 py-2 text-xs font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-xl flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <FileDown className="w-3.5 h-3.5" />
-                    تصدير Word (DOCX)
-                  </button>
-                )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Layer 07: Centered Official Minutes Document Sheet (~735px visual width on screen, full A4 in print/PDF) */}
+              <div className="relative z-10 mt-4 px-3 sm:px-6">
+                <OfficialMinutePrintView bundle={currentBundle} />
               </div>
             </div>
-
-            <OfficialMinutePrintView bundle={currentBundle} />
           </div>
         ) : (
           /* Full Minute Editor View */
