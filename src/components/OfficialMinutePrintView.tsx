@@ -107,7 +107,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">نظام ساعـد المؤسسي (SAAED)</p>
           <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">إدارة الخدمات العامة - قسم إدارة المرافق</p>
           <p className="text-xs text-slate-600 font-mono-num whitespace-nowrap">
-            المرجع الرسمي: MIN-{toArabicNumerals(minute.year)}-{formatMinuteNumber(minute.minuteNumber)}
+            {`المرجع الرسمي: MIN-${toArabicNumerals(minute.year)}-${formatMinuteNumber(minute.minuteNumber)}`}
           </p>
         </div>
 
@@ -122,13 +122,13 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
 
         <div className="space-y-1 text-left font-mono-num text-xs text-slate-600 whitespace-nowrap">
           <p>
-            رقم المحضر: {formatMinuteNumber(minute.minuteNumber)} / {toArabicNumerals(minute.year)}
+            {`رقم المحضر: ${formatMinuteNumber(minute.minuteNumber)} / ${toArabicNumerals(minute.year)}`}
           </p>
           <p>
-            التاريخ: {toArabicNumerals(minute.date) || '-'}
+            {`التاريخ: ${toArabicNumerals(minute.date) || '-'}`}
           </p>
           <p>
-            الوقت: {formatMeetingTime(minute.time)}
+            {`الوقت: ${formatMeetingTime(minute.time)}`}
           </p>
         </div>
       </div>
@@ -140,12 +140,12 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           background: 'linear-gradient(90deg, #0E2042 0%, #163366 50%, #0E2042 100%)',
         }}
       >
-        <h1 className="print-section-title text-lg sm:text-xl font-extrabold text-white tracking-tight">
-          محضر اجتماع رقم ({formatMinuteNumber(minute.minuteNumber)}) لسنة {toArabicNumerals(minute.year)}
+        <h1 className="print-section-title text-lg sm:text-xl font-extrabold text-white">
+          {`محضر اجتماع رقم (${formatMinuteNumber(minute.minuteNumber)}) لسنة ${toArabicNumerals(minute.year)}`}
         </h1>
         {minute.mainSubject && (
           <p className="text-xs sm:text-sm font-semibold text-slate-200 mt-1">
-            الموضوع الرئيسي: {toArabicNumerals(minute.mainSubject)}
+            {`الموضوع الرئيسي: ${toArabicNumerals(minute.mainSubject)}`}
           </p>
         )}
       </div>
@@ -218,7 +218,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           }}
         >
           <Users className="w-4 h-4 text-[#102347] shrink-0" />
-          <span>ثانياً: جدول الحضور والمشاركين ({toArabicNumerals(participants.length)})</span>
+          <span>{`ثانياً: جدول الحضور والمشاركين (${toArabicNumerals(participants.length)})`}</span>
         </h2>
         <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
           <thead>
@@ -415,7 +415,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                         <div className="text-center">{toArabicNumerals(t.subject)}</div>
                         {t.sourceMinuteLabel && (
                           <div className="text-[10px] text-slate-500 mt-1 text-center">
-                            مرحّل من: {toArabicNumerals(t.sourceMinuteLabel)}
+                            {`مرحّل من: ${toArabicNumerals(t.sourceMinuteLabel)}`}
                           </div>
                         )}
                       </td>
@@ -619,8 +619,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
             <div className="text-center">
               <p className="font-extrabold text-[#102347] text-sm mb-1.5">مقرر الاجتماع</p>
               <p className="text-slate-700 font-semibold">
-                <span className="font-bold text-[#102347]">الاسم: </span>
-                {toArabicNumerals(minute.secretaryName) || '........................................................'}
+                {`الاسم: ${toArabicNumerals(minute.secretaryName) || '........................................................'}`}
               </p>
             </div>
             <div className="mt-3 pt-2.5 border-t border-dashed border-slate-300 text-center">
@@ -646,8 +645,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
             <div className="text-center">
               <p className="font-extrabold text-[#102347] text-sm mb-1.5">رئيس الاجتماع</p>
               <p className="text-slate-700 font-semibold">
-                <span className="font-bold text-[#102347]">الاسم: </span>
-                {toArabicNumerals(minute.chairmanName) || '........................................................'}
+                {`الاسم: ${toArabicNumerals(minute.chairmanName) || '........................................................'}`}
               </p>
             </div>
             <div className="mt-3 pt-2.5 border-t border-dashed border-slate-300 text-center">
@@ -674,7 +672,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
       <footer className="avoid-break mt-6 pt-3 border-t border-slate-300 flex items-center justify-between text-[11px] text-slate-600 font-medium">
         <span>نظام ساعـد (SAAED) لإدارة محاضر الاجتماعات والأرشفة الرقمية</span>
         <span className="font-mono-num">
-          محضر رقم ({formatMinuteNumber(minute.minuteNumber)}) لسنة {toArabicNumerals(minute.year)}
+          {`محضر رقم (${formatMinuteNumber(minute.minuteNumber)}) لسنة ${toArabicNumerals(minute.year)}`}
         </span>
       </footer>
     </div>

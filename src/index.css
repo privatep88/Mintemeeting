@@ -34,7 +34,22 @@
   }
 }
 
-/* Scoped Meeting Minutes Table Center Alignment (Preview, Print, and PDF) */
+/* Scoped Meeting Minutes Typography & Table Alignment (Preview, Print, and PDF) */
+.print-container,
+.print-container * {
+  font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0px !important;
+  font-kerning: normal !important;
+  font-variant-ligatures: normal !important;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1 !important;
+}
+
+.print-container .font-mono-num {
+  font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif !important;
+  font-variant-numeric: tabular-nums;
+}
+
 .print-container .print-section-title {
   text-align: right;
 }
@@ -55,8 +70,9 @@
   white-space: normal;
   overflow-wrap: break-word !important;
   word-break: break-word;
-  line-height: 1.6;
+  line-height: 1.65;
   direction: rtl;
+  unicode-bidi: plaintext;
 }
 
 .print-container table.saaed-minute-document-table th.whitespace-nowrap {

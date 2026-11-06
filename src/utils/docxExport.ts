@@ -14,6 +14,7 @@ import {
   Footer,
   PageNumber,
   ShadingType,
+  VerticalAlign,
 } from 'docx';
 import { saveAs } from 'file-saver';
 import { FullMinuteBundle } from '../types/minutes';
@@ -22,6 +23,32 @@ import { toArabicNumerals, formatMinuteNumber } from './numerals';
 const BORDER_COLOR = 'CBD5E1';
 const HEADER_BG = 'F1F5F9';
 const PRIMARY_COLOR = '1E3A8A';
+
+function formatMeetingTimeDocx(rawTime?: string): string {
+  if (!rawTime || !rawTime.trim()) return '-';
+  const trimmed = rawTime.trim();
+  if (trimmed.includes('صباح') || trimmed.includes('مساء')) {
+    return toArabicNumerals(trimmed);
+  }
+  const timeMatch = trimmed.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\s*(AM|PM|am|pm))?$/);
+  if (timeMatch) {
+    let hours = parseInt(timeMatch[1], 10);
+    const minutes = timeMatch[2];
+    const meridiem = timeMatch[4]?.toUpperCase();
+    let period = 'صباحاً';
+    if (meridiem) {
+      period = meridiem === 'PM' ? 'مساءً' : 'صباحاً';
+      if (meridiem === 'PM' && hours < 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+    } else {
+      period = hours >= 12 ? 'مساءً' : 'صباحاً';
+    }
+    const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedTime = `${String(displayHours).padStart(2, '0')}:${minutes}`;
+    return `${toArabicNumerals(formattedTime)} ${period}`;
+  }
+  return toArabicNumerals(trimmed);
+}
 
 function createRtlParagraph(
   text: string,
@@ -65,6 +92,7 @@ function createRtlParagraph(
 function createHeaderCell(text: string, widthPercent?: number): TableCell {
   return new TableCell({
     width: widthPercent ? { size: widthPercent, type: WidthType.PERCENTAGE } : undefined,
+    verticalAlign: VerticalAlign.CENTER,
     shading: {
       fill: HEADER_BG,
       type: ShadingType.CLEAR,
@@ -84,9 +112,10 @@ function createHeaderCell(text: string, widthPercent?: number): TableCell {
 
 function createDataCell(
   text: string,
-  alignment: (typeof AlignmentType)[keyof typeof AlignmentType] = AlignmentType.RIGHT
+  alignment: (typeof AlignmentType)[keyof typeof AlignmentType] = AlignmentType.CENTER
 ): TableCell {
   return new TableCell({
+    verticalAlign: VerticalAlign.CENTER,
     margins: { top: 80, bottom: 80, left: 120, right: 120 },
     children: [createRtlParagraph(text || '-', { size: 21, alignment })],
   });
@@ -130,7 +159,7 @@ export async function exportMinuteToDocx(bundle: FullMinuteBundle): Promise<void
           createHeaderCell('تاريخ الاجتماع', 18),
           createDataCell(minute.date || '-', AlignmentType.CENTER),
           createHeaderCell('وقت الاجتماع', 18),
-          createDataCell(minute.time || '-', AlignmentType.CENTER),
+          createDataCell(formatMeetingTimeDocx(minute.time), AlignmentType.CENTER),
         ],
       }),
       new TableRow({
