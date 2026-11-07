@@ -75,8 +75,7 @@ import {
 } from './components/LoginPage';
 import heroBoardroomImg from './assets/images/saaed_target_boardroom_scene_1793880520448.jpg';
 import archiveHeaderImg from './assets/images/saaed_digital_archiving_header_1793877730074.jpg';
-import deskLeftNotebookImg from './assets/images/saaed_desk_left_notebook.png';
-import deskRightAccessoriesImg from './assets/images/saaed_desk_right_accessories.png';
+import deskPanoramicMatImg from './assets/images/saaed_executive_desk_luxury_mat_1794037923000.jpg';
 
 type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics' | 'directory' | 'preview';
 
@@ -2132,21 +2131,33 @@ export default function App() {
               </div>
             </section>
 
-            {/* Layer 05, 06 & 07: Executive Desk Workspace, Document Action Toolbar & Centered Document */}
-            <div className="print-preview-workspace relative w-full bg-gradient-to-b from-[#DCE6F2] via-[#E9F0F8] to-[#D8E3F0] pt-5 sm:pt-6 pb-10 sm:pb-14 overflow-x-clip">
-              {/* Layer 06: Soft Ambient Executive Desk Lighting Layer (Screen Only) */}
+            {/* Layer 05, 06 & 07: Luxury Executive Desk Workspace, Document Action Toolbar & Centered Document */}
+            <div className="print-preview-workspace relative w-full bg-[#0B1322] pt-5 sm:pt-6 pb-14 sm:pb-20 overflow-x-clip min-h-[900px]">
+              {/* Executive Desk Panoramic Surface Image (Layered underneath document, seamlessly blended) */}
               <div
                 aria-hidden="true"
-                className="no-print absolute inset-0 pointer-events-none select-none"
-                style={{
-                  background:
-                    'radial-gradient(ellipse 65% 85% at 50% 48%, rgba(245, 249, 255, 0.85) 0%, rgba(228, 237, 248, 0.50) 65%, rgba(212, 225, 242, 0.15) 100%)',
-                }}
-              />
+                className="no-print absolute top-0 inset-x-0 w-full h-[880px] pointer-events-none select-none z-0 overflow-hidden flex justify-center"
+              >
+                <img
+                  src={deskPanoramicMatImg}
+                  alt="بيئة مكتبية تنفيذية راقية — ساعد"
+                  className="w-[1440px] max-w-none h-[880px] object-cover object-top select-none pointer-events-none opacity-95"
+                />
+                {/* Smooth vertical fade blending bottom of desk photo into the solid deep navy workspace */}
+                <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#0B1322] via-[#0B1322]/80 to-transparent pointer-events-none" />
+                {/* Subtle radial vignette bringing focus to the central document */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.02) 0%, rgba(11, 19, 34, 0.2) 60%, rgba(11, 19, 34, 0.85) 100%)',
+                  }}
+                />
+              </div>
 
               {/* Layer 05: Document Action Toolbar (~975px width, positioned cleanly below Hero Section — Screen Only) */}
               <div className="no-print relative z-30 mt-0 mx-auto max-w-[975px] w-[94%]">
-                <div className="bg-white border border-[#D3E0EF] rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_12px_30px_-6px_rgba(9,27,61,0.18)] space-y-3">
+                <div className="bg-white/95 backdrop-blur-md border border-[#CAD8EB]/80 rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_16px_36px_-6px_rgba(2,8,20,0.5)] space-y-3">
                   {/* Top Row: Document Title & Metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-2.5">
                     <div className="flex items-center gap-3">
@@ -2274,47 +2285,26 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Layer 07: Centered Official Minutes Document Sheet Flanked by Reference Desk Accessories */}
-              <div className="relative z-10 mt-4 px-3 sm:px-6">
+              {/* Layer 07: Centered Official Minutes Document on Executive Leather Blotter */}
+              <div className="relative z-10 mt-5 sm:mt-6 px-3 sm:px-6">
                 <div className="relative max-w-[735px] w-full mx-auto">
-                  {/* Left Desk Accessories: Luxury Executive Leather Notebook (SAAED Embossed Logo & Gold Fountain Pen) */}
+                  {/* Executive Navy Leather Desk Blotter Frame (Backing Pad with Gold Perimeter Accent) */}
                   <div
                     aria-hidden="true"
-                    className="no-print hidden lg:block absolute pointer-events-none select-none z-0"
+                    className="no-print absolute -inset-2.5 sm:-inset-4 rounded-xl sm:rounded-2xl pointer-events-none select-none z-0"
                     style={{
-                      width: '235px',
-                      height: '755px',
-                      right: 'calc(100% - 10px)',
-                      top: '180px',
+                      background: 'linear-gradient(180deg, #132442 0%, #0D192F 100%)',
+                      boxShadow:
+                        '0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 10px 24px -6px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(199, 166, 107, 0.35)',
                     }}
                   >
-                    <img
-                      src={deskLeftNotebookImg}
-                      alt="دفتر اجتماعات تنفيذي وقلم فاخر — ساعد"
-                      className="w-full h-auto object-contain drop-shadow-[0_4px_14px_rgba(15,28,55,0.10)]"
-                    />
+                    {/* Interior perimeter stitching line */}
+                    <div className="absolute inset-1.5 rounded-lg sm:rounded-xl border border-dashed border-[#C7A66B]/25 pointer-events-none" />
                   </div>
 
-                  {/* Right Desk Accessories: SAAED Dark Metallic Pen Holder & Faceted Glass of Water */}
-                  <div
-                    aria-hidden="true"
-                    className="no-print hidden lg:block absolute pointer-events-none select-none z-0"
-                    style={{
-                      width: '234px',
-                      height: '730px',
-                      left: 'calc(100% - 10px)',
-                      top: '10px',
-                    }}
-                  >
-                    <img
-                      src={deskRightAccessoriesImg}
-                      alt="حامل أقلام تنفيذي وكأس ماء — ساعد"
-                      className="w-full h-auto object-contain drop-shadow-[0_4px_14px_rgba(15,28,55,0.10)]"
-                    />
-                  </div>
-
-                  {/* The Official Document with Natural Drop Shadow */}
-                  <div className="relative z-10">
+                  {/* The Official Document with Realistic Physical Paper Elevation */}
+                  <div className="relative z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.55),0_6px_20px_-4px_rgba(0,0,0,0.35)] rounded-[3px] overflow-hidden">
                     <OfficialMinutePrintView bundle={currentBundle} />
                   </div>
                 </div>
