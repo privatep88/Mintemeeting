@@ -41,7 +41,19 @@ function githubPagesSpaPlugin(): Plugin {
 }
 
 export default defineConfig(() => {
-  const rawBase = process.env.VITE_BASE_PATH?.trim();
+  let rawBase = process.env.VITE_BASE_PATH?.trim();
+
+  // If VITE_BASE_PATH is not explicitly set, auto-detect repository from GitHub Actions environment
+  if (!rawBase && process.env.GITHUB_REPOSITORY) {
+    const parts = process.env.GITHUB_REPOSITORY.split('/');
+    const repo = parts[1]?.trim();
+    if (repo && !repo.endsWith('.github.io')) {
+      rawBase = `/${repo}/`;
+    } else {
+      rawBase = '/';
+    }
+  }
+
   const normalizedBase = rawBase
     ? rawBase.endsWith('/')
       ? rawBase
