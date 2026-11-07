@@ -75,7 +75,9 @@ import {
 } from './components/LoginPage';
 import heroBoardroomImg from './assets/images/saaed_target_boardroom_scene_1793880520448.jpg';
 import archiveHeaderImg from './assets/images/saaed_digital_archiving_header_1793877730074.jpg';
-import deskBrightPanoramicImg from './assets/images/saaed_bright_executive_desk_panoramic_1794039600000.jpg';
+import refLeftNotebookImg from './assets/images/saaed_ref_left_notebook_branded_1794042800000.jpg';
+import refRightAccessoriesImg from './assets/images/saaed_ref_right_accessories_branded_1794042800000.jpg';
+import refBottomUaeRibbonImg from './assets/images/saaed_ref_bottom_uae_flag_ribbon_1794042527850.jpg';
 
 type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics' | 'directory' | 'preview';
 
@@ -2131,58 +2133,104 @@ export default function App() {
               </div>
             </section>
 
-            {/* Layer 05, 06 & 07: Bright Luxury Executive Desk Workspace, Document Action Toolbar & Centered Document */}
-            <div className="print-preview-workspace meeting-minutes-screen-preview relative w-full bg-gradient-to-b from-[#E4EAF2] via-[#EEF2F7] to-[#EDEBE5] pt-5 sm:pt-6 pb-14 sm:pb-20 overflow-x-clip min-h-[900px]">
-              {/* Bright Executive Desk Panoramic Surface Image (3-Slice Responsive Layout so Left/Right Accessories Never Get Covered by the Widened Document) */}
+            {/* Layer 05, 06 & 07: Reference-Matched Pearl-White Executive Workspace, Document Action Toolbar & Centered Document */}
+            <div className="print-preview-workspace meeting-minutes-screen-preview relative w-full bg-gradient-to-b from-[#DCE6F3] via-[#EBF1F8] to-[#EEF3FA] pt-5 sm:pt-6 pb-24 sm:pb-32 lg:pb-36 overflow-x-clip min-h-[960px]">
+              {/* Soft Top-Left Architectural Window-Blind Sunlight Rays & Ambient Pearl Glow */}
+              <div
+                aria-hidden="true"
+                className="no-print absolute inset-x-0 top-0 h-[520px] pointer-events-none select-none z-0 overflow-hidden"
+                style={{
+                  background:
+                    'radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.78) 0%, rgba(235, 242, 250, 0.35) 38%, transparent 70%), repeating-linear-gradient(-28deg, rgba(255, 255, 255, 0.26) 0px, rgba(255, 255, 255, 0.26) 18px, rgba(212, 224, 240, 0.08) 18px, rgba(212, 224, 240, 0.08) 42px)',
+                }}
+              />
+
+              {/* Left & Right Executive Desk Accessories Layer (Matched to Reference Image) */}
               <div
                 aria-hidden="true"
                 dir="ltr"
-                className="no-print absolute top-0 inset-x-0 w-full h-[540px] 2xl:h-[605px] pointer-events-none select-none z-0 overflow-hidden flex justify-center"
+                className="no-print absolute top-0 inset-x-0 w-full pointer-events-none select-none z-0 overflow-hidden flex justify-center"
               >
-                <div className="relative w-full max-w-[1860px] h-full flex items-stretch justify-between">
-                  {/* Left Desk Wing: Executive Hardcover Notebook with Official SAAED Logo & Fountain Pen */}
-                  <div className="hidden lg:block relative w-[240px] 2xl:w-[310px] h-full shrink-0 overflow-hidden">
-                    <img
-                      src={deskBrightPanoramicImg}
-                      alt="دفتر اجتماعات تنفيذي يحمل شعار ساعد وقلم فاخر"
-                      referrerPolicy="no-referrer"
-                      className="w-[950px] 2xl:w-[1225px] max-w-none h-[540px] 2xl:h-[605px] object-cover object-left-top select-none pointer-events-none"
-                    />
+                <div className="relative w-full max-w-[1920px] flex items-start justify-between">
+                  {/* Left Side: Slate-Navy Spiral Notebook with Silver Wire-O Rings, Gold Corners, Pen, Official SAAED Logo & «محاضر الاجتماعات» */}
+                  <div
+                    className="hidden lg:block relative w-[245px] xl:w-[290px] 2xl:w-[345px] shrink-0 -ml-1 xl:ml-0 mt-1"
+                    style={{
+                      WebkitMaskImage:
+                        'linear-gradient(to right, black 78%, transparent 100%), linear-gradient(to bottom, black 84%, transparent 100%)',
+                      WebkitMaskComposite: 'source-in',
+                      maskImage:
+                        'linear-gradient(to right, black 78%, transparent 100%), linear-gradient(to bottom, black 84%, transparent 100%)',
+                      maskComposite: 'intersect',
+                    }}
+                  >
+                    <div className="relative w-full aspect-[896/960]">
+                      <img
+                        src={refLeftNotebookImg}
+                        alt="دفتر محاضر الاجتماعات يحمل شعار ساعد الرسمي"
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-contain select-none pointer-events-none"
+                      />
+                      {/* Crisp Arabic Cover Title «محاضر الاجتماعات» Aligned Below the Official SAAED Logo on the Notebook Cover */}
+                      <div
+                        dir="rtl"
+                        className="absolute pointer-events-none select-none text-center font-display font-black text-[#0B1933] leading-[1.12] tracking-tight drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+                        style={{
+                          left: '47.5%',
+                          top: '50.8%',
+                          transform: 'translate(-50%, -50%) rotate(-14.2deg)',
+                        }}
+                      >
+                        <div className="text-[18px] xl:text-[21px] 2xl:text-[25px]">محاضر</div>
+                        <div className="text-[18px] xl:text-[21px] 2xl:text-[25px]">الاجتماعات</div>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Center Flexible Desk & Ivory Leather Blotter Bridge (Adapts to Document Width Seamlessly) */}
-                  <div className="relative flex-1 min-w-0 h-full overflow-hidden">
-                    <img
-                      src={deskBrightPanoramicImg}
-                      alt="سطح مكتبي تنفيذي راقٍ — ساعد"
-                      referrerPolicy="no-referrer"
-                      className="h-[540px] 2xl:h-[605px] max-w-none select-none pointer-events-none"
-                      style={{
-                        width: '200%',
-                        marginLeft: '-50.7042%',
-                      }}
-                    />
+                  {/* Right Side: Green Plant in White Pot, Navy/Gold Executive Pen Holder with SAAED Logo & White Ceramic Coffee Mug on Wooden Coaster with Official SAAED Logo */}
+                  <div
+                    className="hidden lg:block relative w-[220px] xl:w-[255px] 2xl:w-[295px] shrink-0 -mr-1 xl:mr-0 mt-0"
+                    style={{
+                      WebkitMaskImage:
+                        'linear-gradient(to left, black 80%, transparent 100%), linear-gradient(to bottom, black 86%, transparent 100%)',
+                      WebkitMaskComposite: 'source-in',
+                      maskImage:
+                        'linear-gradient(to left, black 80%, transparent 100%), linear-gradient(to bottom, black 86%, transparent 100%)',
+                      maskComposite: 'intersect',
+                    }}
+                  >
+                    <div className="relative w-full aspect-[456/1060]">
+                      <img
+                        src={refRightAccessoriesImg}
+                        alt="نبتة مكتبية ومقلمة فاخرة وكوب سيراميك يحمل شعار ساعد الرسمي"
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-contain select-none pointer-events-none"
+                      />
+                    </div>
                   </div>
-
-                  {/* Right Desk Wing: Crystal Water Glass, Brushed Pen Holder & White Porcelain Cup with Official SAAED Logo */}
-                  <div className="hidden lg:block relative w-[234px] 2xl:w-[302px] h-full shrink-0 overflow-hidden">
-                    <img
-                      src={deskBrightPanoramicImg}
-                      alt="كوب تنفيذي يحمل شعار ساعد وكأس ماء ومقلمة"
-                      referrerPolicy="no-referrer"
-                      className="w-[950px] 2xl:w-[1225px] max-w-none h-[540px] 2xl:h-[605px] object-cover object-right-top ml-auto select-none pointer-events-none"
-                    />
-                  </div>
-
-                  {/* Soft top daylight mist behind Action Toolbar for calm visual clarity */}
-                  <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#E4EAF2]/75 via-[#E4EAF2]/30 to-transparent pointer-events-none" />
-                  {/* Smooth vertical fade blending bottom of desk surface into the calm off-white workspace */}
-                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#EEF1F6] via-[#EEF1F6]/85 to-transparent pointer-events-none" />
                 </div>
               </div>
 
+              {/* Bottom Institutional Scene: Flowing 3D UAE Flag Silk Ribbon, Desktop UAE Flag on Golden Stand & Subtle Skyline Silhouette */}
+              <div
+                aria-hidden="true"
+                dir="ltr"
+                className="no-print absolute bottom-0 inset-x-0 w-full h-[240px] sm:h-[310px] lg:h-[390px] xl:h-[440px] pointer-events-none select-none z-0 overflow-hidden flex justify-center"
+                style={{
+                  WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 26%, black 100%)',
+                  maskImage: 'linear-gradient(to bottom, transparent 0%, black 26%, black 100%)',
+                }}
+              >
+                <img
+                  src={refBottomUaeRibbonImg}
+                  alt="علم دولة الإمارات العربية المتحدة وشريط العلم المؤسسي"
+                  referrerPolicy="no-referrer"
+                  className="w-full max-w-[1920px] h-full object-cover object-bottom select-none pointer-events-none"
+                />
+              </div>
+
               {/* Layer 05: Document Action Toolbar (Aligned with Widened Preview Container — Screen Only) */}
-              <div className="no-print relative z-30 mt-0 mx-auto w-[96%] max-w-[975px] xl:max-w-[calc(100vw-465px)] 2xl:max-w-[min(1160px,calc(100vw-580px))]">
+              <div className="no-print relative z-30 mt-0 mx-auto w-[96%] max-w-[975px] lg:max-w-[calc(100vw-480px)] 2xl:max-w-[min(1150px,calc(100vw-580px))]">
                 <div className="bg-white/95 backdrop-blur-md border border-[#D3E0EF] rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_12px_30px_-6px_rgba(9,27,61,0.14),0_4px_12px_-2px_rgba(9,27,61,0.06)] space-y-3">
                   {/* Top Row: Document Title & Metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-2.5">
@@ -2311,26 +2359,23 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Layer 07: Centered Official Minutes Document on Bright Executive Ivory Leather Blotter (Adaptive Screen Width) */}
+              {/* Layer 07: Centered Official Minutes Document on Luminous White Executive Frame (Adaptive Screen Width Preserved) */}
               <div className="relative z-10 mt-5 sm:mt-6 px-3 sm:px-6">
-                <div className="meeting-preview-document-shell relative w-full max-w-[960px] lg:max-w-[calc(100vw-465px)] 2xl:max-w-[min(1160px,calc(100vw-580px))] mx-auto">
-                  {/* Executive Ivory / Off-White Leather Desk Blotter Frame (Continuous Backing Pad) */}
+                <div className="meeting-preview-document-shell relative w-full max-w-[960px] lg:max-w-[calc(100vw-480px)] 2xl:max-w-[min(1150px,calc(100vw-580px))] mx-auto">
+                  {/* Soft Pearl-White Executive Outer Card Frame Matching Reference Scene */}
                   <div
                     aria-hidden="true"
-                    className="no-print absolute -inset-2.5 sm:-inset-3.5 rounded-xl sm:rounded-2xl pointer-events-none select-none z-0"
+                    className="no-print absolute -inset-2 sm:-inset-3 rounded-[18px] pointer-events-none select-none z-0"
                     style={{
-                      background: 'linear-gradient(180deg, rgba(247, 245, 240, 0.92) 0%, rgba(240, 238, 232, 0.96) 100%)',
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(246, 249, 253, 0.96) 100%)',
                       boxShadow:
-                        '0 18px 40px -10px rgba(15, 28, 55, 0.11), 0 6px 16px -4px rgba(15, 28, 55, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95)',
-                      border: '1px solid rgba(208, 203, 192, 0.85)',
+                        '0 22px 48px -12px rgba(13, 30, 62, 0.16), 0 8px 20px -4px rgba(13, 30, 62, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1)',
+                      border: '1px solid rgba(213, 225, 242, 0.95)',
                     }}
-                  >
-                    {/* Fine perimeter leather stitching line */}
-                    <div className="absolute inset-1.5 rounded-lg sm:rounded-xl border border-dashed border-[#C5BFB2]/65 pointer-events-none" />
-                  </div>
+                  />
 
-                  {/* The Official Document with Clean, Refined Physical Paper Elevation */}
-                  <div className="relative z-10 shadow-[0_14px_34px_-8px_rgba(15,28,55,0.14),0_4px_12px_-3px_rgba(15,28,55,0.07)] rounded-[2px] overflow-hidden">
+                  {/* The Official Document with Clean Physical Paper Elevation */}
+                  <div className="relative z-10 shadow-[0_10px_28px_-6px_rgba(13,30,62,0.12),0_2px_8px_-2px_rgba(13,30,62,0.06)] rounded-[8px] overflow-hidden">
                     <OfficialMinutePrintView bundle={currentBundle} />
                   </div>
                 </div>
