@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: 'pages'
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
 
       - name: Setup GitHub Pages
         id: pages
@@ -36,22 +37,24 @@ jobs:
         continue-on-error: true
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps || npm install
+        run: npm ci || npm install --legacy-peer-deps || npm install
 
       - name: Build production bundle with Vite
         env:
           VITE_BASE_PATH: ${{ steps.pages.outputs.base_path || './' }}
         run: npm run build
 
-      - name: Verify compiled dist output (No raw TSX in dist)
+      - name: Verify compiled dist output (Production Quality Gate)
         run: |
           test -f dist/index.html
           test -f dist/404.html
           test -f dist/.nojekyll
+          test -d dist/assets
           if grep -q "main.tsx" dist/index.html; then
-            echo "Error: dist/index.html still references raw main.tsx!"
+            echo "Critical Error: dist/index.html references uncompiled main.tsx!"
             exit 1
           fi
+          echo "Verified: dist/index.html contains only compiled production bundles."
 
       - name: Publish dist to gh-pages branch (Branch Deployment Fallback)
         uses: peaceiris/actions-gh-pages@v4

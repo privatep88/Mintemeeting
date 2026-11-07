@@ -20,6 +20,22 @@
         }
       }, true);
     </script>
+    <!-- GITHUB_PAGES_ROOT_FALLBACK_START -->
+    <script>
+      // Fallback for GitHub Pages when the repository root is served directly without Vite dev server.
+      // If accessed on *.github.io from uncompiled root, automatically redirects to the compiled bundle in /docs/
+      (function () {
+        var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.indexOf('run.app') !== -1;
+        if (!isLocal && location.hostname.endsWith('github.io')) {
+          var pathname = location.pathname;
+          if (pathname.indexOf('/docs') === -1) {
+            var target = pathname.replace(/\/+$/, '') + '/docs/' + location.search + location.hash;
+            location.replace(target);
+          }
+        }
+      })();
+    </script>
+    <!-- GITHUB_PAGES_ROOT_FALLBACK_END -->
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-700 selection:text-white">
     <div id="root"></div>
