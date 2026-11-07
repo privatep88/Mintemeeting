@@ -69,7 +69,7 @@
   vertical-align: middle !important;
   white-space: normal;
   overflow-wrap: break-word !important;
-  word-break: break-word;
+  word-break: normal;
   line-height: 1.65;
   direction: rtl;
   unicode-bidi: plaintext;
@@ -77,6 +77,180 @@
 
 .print-container table.saaed-minute-document-table th.whitespace-nowrap {
   white-space: nowrap !important;
+}
+
+/* Status Badge Alignment & Single-Line Enforcement ("✓ مكتمل" & Short Badges) */
+.print-container .meeting-preview-status-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+  width: max-content !important;
+  max-width: none !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  line-height: 1.4 !important;
+  vertical-align: middle !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+.print-container .meeting-preview-status-badge > span {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  display: inline-block !important;
+}
+
+/* ==========================================================================
+   Scoped Screen-Only Meeting Minutes Preview Optimization
+   Strictly isolated to @media screen and .meeting-minutes-screen-preview
+   Does NOT affect @media print, offscreen PDF export (794px A4), or Word export
+   ========================================================================== */
+@media screen {
+  .meeting-minutes-screen-preview .meeting-preview-document {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 1.5rem 1.5rem !important;
+  }
+
+  @media (min-width: 640px) {
+    .meeting-minutes-screen-preview .meeting-preview-document {
+      padding: 1.75rem 2rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .meeting-minutes-screen-preview .meeting-preview-document {
+      padding: 2rem 2.25rem !important;
+    }
+  }
+
+  .meeting-minutes-screen-preview .meeting-preview-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table th,
+  .meeting-minutes-screen-preview table.meeting-preview-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+    white-space: normal;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    line-height: 1.75 !important;
+    padding: 0.625rem 0.75rem !important;
+    box-sizing: border-box !important;
+    direction: rtl !important;
+    unicode-bidi: normal !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table th {
+    font-size: 0.8125rem !important;
+    padding-top: 0.6875rem !important;
+    padding-bottom: 0.6875rem !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table td {
+    font-size: 0.8125rem !important;
+  }
+
+  /* 1. Meeting Metadata Table (أولاً: بيانات الاجتماع) */
+  .meeting-minutes-screen-preview table.meeting-preview-table-metadata th {
+    width: 18% !important;
+    min-width: 130px;
+    white-space: nowrap !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-metadata td {
+    width: 32% !important;
+    min-width: 150px;
+  }
+
+  /* 2. Participants Table (ثانياً: جدول الحضور والمشاركين) */
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants th:nth-child(1),
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants td:nth-child(1) {
+    width: 5% !important;
+    min-width: 44px;
+    white-space: nowrap !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants th:nth-child(2),
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants td:nth-child(2) {
+    width: 28% !important;
+    min-width: 175px;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants th:nth-child(3),
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants td:nth-child(3) {
+    width: 34% !important;
+    min-width: 195px;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants th:nth-child(4),
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants td:nth-child(4) {
+    width: 13% !important;
+    min-width: 96px;
+    white-space: nowrap !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants th:nth-child(5),
+  .meeting-minutes-screen-preview table.meeting-preview-table-participants td:nth-child(5) {
+    width: 20% !important;
+    min-width: 120px;
+  }
+
+  /* 3, 4, 5. Outcomes, Ongoing & New Topics Tables (ثالثاً ورابعاً وخامساً) */
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(1),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(1) {
+    width: 4.5% !important;
+    min-width: 42px;
+    white-space: nowrap !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(2),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(2) {
+    width: 21% !important;
+    min-width: 150px;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(3),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(3) {
+    width: 36% !important;
+    min-width: 230px;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(4),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(4) {
+    width: 16% !important;
+    min-width: 130px;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(5),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(5) {
+    width: 11% !important;
+    min-width: 98px;
+    white-space: nowrap !important;
+  }
+
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics th:nth-child(6),
+  .meeting-minutes-screen-preview table.meeting-preview-table-topics td:nth-child(6) {
+    width: 11.5% !important;
+    min-width: 108px;
+    white-space: nowrap !important;
+  }
 }
 
 /* Official Print & PDF Stylesheet (A4 Portrait 210mm x 297mm) */

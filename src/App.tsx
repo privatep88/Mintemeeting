@@ -75,7 +75,7 @@ import {
 } from './components/LoginPage';
 import heroBoardroomImg from './assets/images/saaed_target_boardroom_scene_1793880520448.jpg';
 import archiveHeaderImg from './assets/images/saaed_digital_archiving_header_1793877730074.jpg';
-import deskPanoramicMatImg from './assets/images/saaed_executive_desk_luxury_mat_1794037923000.jpg';
+import deskBrightPanoramicImg from './assets/images/saaed_bright_executive_desk_panoramic_1794039600000.jpg';
 
 type ActiveTab = 'editor' | 'active_list' | 'approved_list' | 'completed_topics' | 'directory' | 'preview';
 
@@ -2131,33 +2131,59 @@ export default function App() {
               </div>
             </section>
 
-            {/* Layer 05, 06 & 07: Luxury Executive Desk Workspace, Document Action Toolbar & Centered Document */}
-            <div className="print-preview-workspace relative w-full bg-[#0B1322] pt-5 sm:pt-6 pb-14 sm:pb-20 overflow-x-clip min-h-[900px]">
-              {/* Executive Desk Panoramic Surface Image (Layered underneath document, seamlessly blended) */}
+            {/* Layer 05, 06 & 07: Bright Luxury Executive Desk Workspace, Document Action Toolbar & Centered Document */}
+            <div className="print-preview-workspace meeting-minutes-screen-preview relative w-full bg-gradient-to-b from-[#E4EAF2] via-[#EEF2F7] to-[#EDEBE5] pt-5 sm:pt-6 pb-14 sm:pb-20 overflow-x-clip min-h-[900px]">
+              {/* Bright Executive Desk Panoramic Surface Image (3-Slice Responsive Layout so Left/Right Accessories Never Get Covered by the Widened Document) */}
               <div
                 aria-hidden="true"
-                className="no-print absolute top-0 inset-x-0 w-full h-[880px] pointer-events-none select-none z-0 overflow-hidden flex justify-center"
+                dir="ltr"
+                className="no-print absolute top-0 inset-x-0 w-full h-[540px] 2xl:h-[605px] pointer-events-none select-none z-0 overflow-hidden flex justify-center"
               >
-                <img
-                  src={deskPanoramicMatImg}
-                  alt="بيئة مكتبية تنفيذية راقية — ساعد"
-                  className="w-[1440px] max-w-none h-[880px] object-cover object-top select-none pointer-events-none opacity-95"
-                />
-                {/* Smooth vertical fade blending bottom of desk photo into the solid deep navy workspace */}
-                <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#0B1322] via-[#0B1322]/80 to-transparent pointer-events-none" />
-                {/* Subtle radial vignette bringing focus to the central document */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.02) 0%, rgba(11, 19, 34, 0.2) 60%, rgba(11, 19, 34, 0.85) 100%)',
-                  }}
-                />
+                <div className="relative w-full max-w-[1860px] h-full flex items-stretch justify-between">
+                  {/* Left Desk Wing: Executive Hardcover Notebook with Official SAAED Logo & Fountain Pen */}
+                  <div className="hidden lg:block relative w-[240px] 2xl:w-[310px] h-full shrink-0 overflow-hidden">
+                    <img
+                      src={deskBrightPanoramicImg}
+                      alt="دفتر اجتماعات تنفيذي يحمل شعار ساعد وقلم فاخر"
+                      referrerPolicy="no-referrer"
+                      className="w-[950px] 2xl:w-[1225px] max-w-none h-[540px] 2xl:h-[605px] object-cover object-left-top select-none pointer-events-none"
+                    />
+                  </div>
+
+                  {/* Center Flexible Desk & Ivory Leather Blotter Bridge (Adapts to Document Width Seamlessly) */}
+                  <div className="relative flex-1 min-w-0 h-full overflow-hidden">
+                    <img
+                      src={deskBrightPanoramicImg}
+                      alt="سطح مكتبي تنفيذي راقٍ — ساعد"
+                      referrerPolicy="no-referrer"
+                      className="h-[540px] 2xl:h-[605px] max-w-none select-none pointer-events-none"
+                      style={{
+                        width: '200%',
+                        marginLeft: '-50.7042%',
+                      }}
+                    />
+                  </div>
+
+                  {/* Right Desk Wing: Crystal Water Glass, Brushed Pen Holder & White Porcelain Cup with Official SAAED Logo */}
+                  <div className="hidden lg:block relative w-[234px] 2xl:w-[302px] h-full shrink-0 overflow-hidden">
+                    <img
+                      src={deskBrightPanoramicImg}
+                      alt="كوب تنفيذي يحمل شعار ساعد وكأس ماء ومقلمة"
+                      referrerPolicy="no-referrer"
+                      className="w-[950px] 2xl:w-[1225px] max-w-none h-[540px] 2xl:h-[605px] object-cover object-right-top ml-auto select-none pointer-events-none"
+                    />
+                  </div>
+
+                  {/* Soft top daylight mist behind Action Toolbar for calm visual clarity */}
+                  <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#E4EAF2]/75 via-[#E4EAF2]/30 to-transparent pointer-events-none" />
+                  {/* Smooth vertical fade blending bottom of desk surface into the calm off-white workspace */}
+                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#EEF1F6] via-[#EEF1F6]/85 to-transparent pointer-events-none" />
+                </div>
               </div>
 
-              {/* Layer 05: Document Action Toolbar (~975px width, positioned cleanly below Hero Section — Screen Only) */}
-              <div className="no-print relative z-30 mt-0 mx-auto max-w-[975px] w-[94%]">
-                <div className="bg-white/95 backdrop-blur-md border border-[#CAD8EB]/80 rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_16px_36px_-6px_rgba(2,8,20,0.5)] space-y-3">
+              {/* Layer 05: Document Action Toolbar (Aligned with Widened Preview Container — Screen Only) */}
+              <div className="no-print relative z-30 mt-0 mx-auto w-[96%] max-w-[975px] xl:max-w-[calc(100vw-465px)] 2xl:max-w-[min(1160px,calc(100vw-580px))]">
+                <div className="bg-white/95 backdrop-blur-md border border-[#D3E0EF] rounded-[16px] px-4 sm:px-5 py-3.5 h-auto shadow-[0_12px_30px_-6px_rgba(9,27,61,0.14),0_4px_12px_-2px_rgba(9,27,61,0.06)] space-y-3">
                   {/* Top Row: Document Title & Metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-2.5">
                     <div className="flex items-center gap-3">
@@ -2285,26 +2311,26 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Layer 07: Centered Official Minutes Document on Executive Leather Blotter */}
+              {/* Layer 07: Centered Official Minutes Document on Bright Executive Ivory Leather Blotter (Adaptive Screen Width) */}
               <div className="relative z-10 mt-5 sm:mt-6 px-3 sm:px-6">
-                <div className="relative max-w-[735px] w-full mx-auto">
-                  {/* Executive Navy Leather Desk Blotter Frame (Backing Pad with Gold Perimeter Accent) */}
+                <div className="meeting-preview-document-shell relative w-full max-w-[960px] lg:max-w-[calc(100vw-465px)] 2xl:max-w-[min(1160px,calc(100vw-580px))] mx-auto">
+                  {/* Executive Ivory / Off-White Leather Desk Blotter Frame (Continuous Backing Pad) */}
                   <div
                     aria-hidden="true"
-                    className="no-print absolute -inset-2.5 sm:-inset-4 rounded-xl sm:rounded-2xl pointer-events-none select-none z-0"
+                    className="no-print absolute -inset-2.5 sm:-inset-3.5 rounded-xl sm:rounded-2xl pointer-events-none select-none z-0"
                     style={{
-                      background: 'linear-gradient(180deg, #132442 0%, #0D192F 100%)',
+                      background: 'linear-gradient(180deg, rgba(247, 245, 240, 0.92) 0%, rgba(240, 238, 232, 0.96) 100%)',
                       boxShadow:
-                        '0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 10px 24px -6px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.12)',
-                      border: '1px solid rgba(199, 166, 107, 0.35)',
+                        '0 18px 40px -10px rgba(15, 28, 55, 0.11), 0 6px 16px -4px rgba(15, 28, 55, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95)',
+                      border: '1px solid rgba(208, 203, 192, 0.85)',
                     }}
                   >
-                    {/* Interior perimeter stitching line */}
-                    <div className="absolute inset-1.5 rounded-lg sm:rounded-xl border border-dashed border-[#C7A66B]/25 pointer-events-none" />
+                    {/* Fine perimeter leather stitching line */}
+                    <div className="absolute inset-1.5 rounded-lg sm:rounded-xl border border-dashed border-[#C5BFB2]/65 pointer-events-none" />
                   </div>
 
-                  {/* The Official Document with Realistic Physical Paper Elevation */}
-                  <div className="relative z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.55),0_6px_20px_-4px_rgba(0,0,0,0.35)] rounded-[3px] overflow-hidden">
+                  {/* The Official Document with Clean, Refined Physical Paper Elevation */}
+                  <div className="relative z-10 shadow-[0_14px_34px_-8px_rgba(15,28,55,0.14),0_4px_12px_-3px_rgba(15,28,55,0.07)] rounded-[2px] overflow-hidden">
                     <OfficialMinutePrintView bundle={currentBundle} />
                   </div>
                 </div>

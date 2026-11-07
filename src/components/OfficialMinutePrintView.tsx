@@ -44,20 +44,20 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
     const displayStatus = toArabicNumerals(status);
     if (isCompletedTopicStatus(status)) {
       return (
-        <span className="inline-flex items-center justify-center gap-1 px-2.5 py-0.5 rounded bg-[#E1F7EE] text-[#0D6E52] border border-[#88D8C0] font-bold mx-auto">
-          <span>✓</span>
-          <span>{displayStatus}</span>
+        <span className="meeting-preview-status-badge meeting-preview-status-completed inline-flex items-center justify-center gap-1 px-2.5 py-0.5 rounded bg-[#E1F7EE] text-[#0D6E52] border border-[#88D8C0] font-bold mx-auto whitespace-nowrap w-max">
+          <span className="shrink-0 leading-none">✓</span>
+          <span className="whitespace-nowrap">{displayStatus}</span>
         </span>
       );
     }
     if (status.includes('متأخر')) {
       return (
-        <span className="inline-flex items-center justify-center px-2 py-0.5 rounded bg-red-50 text-red-800 border border-red-200 font-bold mx-auto">
-          {displayStatus}
+        <span className="meeting-preview-status-badge meeting-preview-status-delayed inline-flex items-center justify-center px-2 py-0.5 rounded bg-red-50 text-red-800 border border-red-200 font-bold mx-auto whitespace-nowrap w-max">
+          <span className="whitespace-nowrap">{displayStatus}</span>
         </span>
       );
     }
-    return <span className="font-bold text-[#172640]">{displayStatus}</span>;
+    return <span className="meeting-preview-status-text font-bold text-[#172640]">{displayStatus}</span>;
   };
 
   const formatMeetingTime = (rawTime?: string): string => {
@@ -99,7 +99,7 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
   return (
     <div
       dir="rtl"
-      className="print-container bg-white text-[#172640] border border-[#CFDCEB] rounded-[16px] p-5 sm:p-7 max-w-[735px] w-full mx-auto shadow-[0_18px_45px_rgba(9,27,61,0.16),0_4px_12px_rgba(9,27,61,0.06)]"
+      className="print-container meeting-preview-document bg-white text-[#172640] border border-[#CFDCEB] rounded-[16px] p-5 sm:p-7 max-w-[735px] w-full mx-auto shadow-[0_18px_45px_rgba(9,27,61,0.16),0_4px_12px_rgba(9,27,61,0.06)]"
     >
       {/* Official Institutional Header */}
       <div className="avoid-break grid grid-cols-3 items-center border-b-2 border-[#102347] pb-4 mb-5">
@@ -161,52 +161,54 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           <Calendar className="w-4 h-4 text-[#102347] shrink-0" />
           <span>أولاً: بيانات الاجتماع</span>
         </h2>
-        <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
-          <tbody>
-            <tr>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
-                رقم المحضر
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num font-semibold w-2/6">
-                {formatMinuteNumber(minute.minuteNumber)}
-              </td>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
-                سنة الاجتماع
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num font-semibold w-2/6">
-                {toArabicNumerals(minute.year)}
-              </td>
-            </tr>
-            <tr>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                تاريخ الاجتماع
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                {toArabicNumerals(minute.date) || '-'}
-              </td>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                وقت الاجتماع
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                {formatMeetingTime(minute.time)}
-              </td>
-            </tr>
-            <tr>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                مكان الاجتماع
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                {toArabicNumerals(minute.location) || '-'}
-              </td>
-              <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-2.5 py-2 text-center align-middle whitespace-nowrap leading-relaxed font-bold">
-                موضوع الاجتماع الرئيسي
-              </th>
-              <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                {toArabicNumerals(minute.mainSubject) || '-'}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="meeting-preview-table-scroll">
+          <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-metadata w-full border-collapse border border-[#9FB2CC] text-xs">
+            <tbody>
+              <tr>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
+                  رقم المحضر
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num font-semibold w-2/6">
+                  {formatMinuteNumber(minute.minuteNumber)}
+                </td>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/6">
+                  سنة الاجتماع
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num font-semibold w-2/6">
+                  {toArabicNumerals(minute.year)}
+                </td>
+              </tr>
+              <tr>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  تاريخ الاجتماع
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                  {toArabicNumerals(minute.date) || '-'}
+                </td>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  وقت الاجتماع
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                  {formatMeetingTime(minute.time)}
+                </td>
+              </tr>
+              <tr>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  مكان الاجتماع
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                  {toArabicNumerals(minute.location) || '-'}
+                </td>
+                <th className="border border-[#B8C7DC] bg-[#E3EBF6] text-[#102347] px-2.5 py-2 text-center align-middle whitespace-nowrap leading-relaxed font-bold">
+                  موضوع الاجتماع الرئيسي
+                </th>
+                <td className="border border-[#B8C7DC] bg-white px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                  {toArabicNumerals(minute.mainSubject) || '-'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {/* Section 2: Participants */}
@@ -220,59 +222,61 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           <Users className="w-4 h-4 text-[#102347] shrink-0" />
           <span>{`ثانياً: جدول الحضور والمشاركين (${toArabicNumerals(participants.length)})`}</span>
         </h2>
-        <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
-          <thead>
-            <tr className="bg-[#DCE6F2] text-[#102347]">
-              <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
-                م
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                الاسم
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                المسمى الوظيفي
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-28">
-                حالة الحضور
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                ملاحظات
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {participants.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
-                >
-                  لم يتم إدراج مشاركين في هذا المحضر
-                </td>
+        <div className="meeting-preview-table-scroll">
+          <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-participants w-full border-collapse border border-[#9FB2CC] text-xs">
+            <thead>
+              <tr className="bg-[#DCE6F2] text-[#102347]">
+                <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
+                  م
+                </th>
+                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  الاسم
+                </th>
+                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  المسمى الوظيفي
+                </th>
+                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-28">
+                  حالة الحضور
+                </th>
+                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                  ملاحظات
+                </th>
               </tr>
-            ) : (
-              participants.map((p, index) => (
-                <tr key={p.id} className="bg-white">
-                  <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                    {toArabicNumerals(index + 1)}
-                  </td>
-                  <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold text-[#102347]">
-                    {toArabicNumerals(p.name)}
-                  </td>
-                  <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                    {toArabicNumerals(p.jobTitle) || '-'}
-                  </td>
-                  <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
-                    {getAttendanceLabel(p.attendanceStatus)}
-                  </td>
-                  <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                    {toArabicNumerals(p.notes) || '-'}
+            </thead>
+            <tbody>
+              {participants.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                  >
+                    لم يتم إدراج مشاركين في هذا المحضر
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                participants.map((p, index) => (
+                  <tr key={p.id} className="bg-white">
+                    <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                      {toArabicNumerals(index + 1)}
+                    </td>
+                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold text-[#102347]">
+                      {toArabicNumerals(p.name)}
+                    </td>
+                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                      {toArabicNumerals(p.jobTitle) || '-'}
+                    </td>
+                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
+                      {getAttendanceLabel(p.attendanceStatus)}
+                    </td>
+                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                      {toArabicNumerals(p.notes) || '-'}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {/* Section 3: Inputs & Outcomes */}
@@ -286,87 +290,8 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
           <ClipboardList className="w-4 h-4 text-[#102347] shrink-0" />
           <span>ثالثاً: مدخلات ونتائج الاجتماع مفصلة أدناه</span>
         </h2>
-        <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
-          <thead>
-            <tr className="bg-[#DCE6F2] text-[#102347]">
-              <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
-                م
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
-                الموضوع
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                التوصيات
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
-                مسؤولية التنفيذ
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                تاريخ التنفيذ
-              </th>
-              <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                الحالة
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {outcomes.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
-                >
-                  لا توجد مدخلات أو نتائج مسجلة في هذا القسم
-                </td>
-              </tr>
-            ) : (
-              outcomes.map((o, index) => {
-                const completed = isCompletedTopicStatus(o.status);
-                return (
-                  <tr key={o.id} className="bg-white">
-                    <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                      {toArabicNumerals(index + 1)}
-                    </td>
-                    <td
-                      className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
-                        completed ? 'text-emerald-950' : 'text-[#102347]'
-                      }`}
-                    >
-                      {toArabicNumerals(o.subject)}
-                    </td>
-                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                      {toArabicNumerals(o.recommendations)}
-                    </td>
-                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                      {toArabicNumerals(o.responsiblePerson) || '-'}
-                    </td>
-                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                      {toArabicNumerals(o.executionDate) || '-'}
-                    </td>
-                    <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
-                      {renderTopicStatusCell(o.status)}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </section>
-
-      {/* Section 4: Ongoing Topics */}
-      {bundle.showOngoingTable !== false && (
-        <section className="print-section mb-5">
-          <h2
-            className="print-section-title text-right text-xs sm:text-sm font-extrabold text-[#102347] border border-b-0 border-[#9FB2CC] rounded-t-md px-3.5 py-2 mb-0 flex items-center justify-start gap-2"
-            style={{
-              background: 'linear-gradient(270deg, #B8C7DC 0%, #C7D4E6 55%, #D6E1F0 100%)',
-            }}
-          >
-            <RefreshCw className="w-4 h-4 text-[#102347] shrink-0" />
-            <span>رابعاً: المواضيع المستمرة</span>
-          </h2>
-          <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
+        <div className="meeting-preview-table-scroll">
+          <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-topics w-full border-collapse border border-[#9FB2CC] text-xs">
             <thead>
               <tr className="bg-[#DCE6F2] text-[#102347]">
                 <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
@@ -390,20 +315,20 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
               </tr>
             </thead>
             <tbody>
-              {ongoingTopics.length === 0 ? (
+              {outcomes.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
                     className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
                   >
-                    لا توجد مواضيع مستمرة مسجلة في هذا القسم
+                    لا توجد مدخلات أو نتائج مسجلة في هذا القسم
                   </td>
                 </tr>
               ) : (
-                ongoingTopics.map((t, index) => {
-                  const completed = isCompletedTopicStatus(t.topicStatus);
+                outcomes.map((o, index) => {
+                  const completed = isCompletedTopicStatus(o.status);
                   return (
-                    <tr key={t.id} className="bg-white">
+                    <tr key={o.id} className="bg-white">
                       <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
                         {toArabicNumerals(index + 1)}
                       </td>
@@ -412,24 +337,19 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
                           completed ? 'text-emerald-950' : 'text-[#102347]'
                         }`}
                       >
-                        <div className="text-center">{toArabicNumerals(t.subject)}</div>
-                        {t.sourceMinuteLabel && (
-                          <div className="text-[10px] text-slate-500 mt-1 text-center">
-                            {`مرحّل من: ${toArabicNumerals(t.sourceMinuteLabel)}`}
-                          </div>
-                        )}
+                        {toArabicNumerals(o.subject)}
                       </td>
                       <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(t.recommendationOrAction) || '-'}
+                        {toArabicNumerals(o.recommendations)}
                       </td>
                       <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(t.followUpPerson) || '-'}
+                        {toArabicNumerals(o.responsiblePerson) || '-'}
                       </td>
                       <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                        {toArabicNumerals(t.followUpDate) || '-'}
+                        {toArabicNumerals(o.executionDate) || '-'}
                       </td>
                       <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
-                        {renderTopicStatusCell(t.topicStatus)}
+                        {renderTopicStatusCell(o.status)}
                       </td>
                     </tr>
                   );
@@ -437,6 +357,94 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
               )}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Section 4: Ongoing Topics */}
+      {bundle.showOngoingTable !== false && (
+        <section className="print-section mb-5">
+          <h2
+            className="print-section-title text-right text-xs sm:text-sm font-extrabold text-[#102347] border border-b-0 border-[#9FB2CC] rounded-t-md px-3.5 py-2 mb-0 flex items-center justify-start gap-2"
+            style={{
+              background: 'linear-gradient(270deg, #B8C7DC 0%, #C7D4E6 55%, #D6E1F0 100%)',
+            }}
+          >
+            <RefreshCw className="w-4 h-4 text-[#102347] shrink-0" />
+            <span>رابعاً: المواضيع المستمرة</span>
+          </h2>
+          <div className="meeting-preview-table-scroll">
+            <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-topics w-full border-collapse border border-[#9FB2CC] text-xs">
+              <thead>
+                <tr className="bg-[#DCE6F2] text-[#102347]">
+                  <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
+                    م
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
+                    الموضوع
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                    التوصيات
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
+                    مسؤولية التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    تاريخ التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    الحالة
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {ongoingTopics.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                    >
+                      لا توجد مواضيع مستمرة مسجلة في هذا القسم
+                    </td>
+                  </tr>
+                ) : (
+                  ongoingTopics.map((t, index) => {
+                    const completed = isCompletedTopicStatus(t.topicStatus);
+                    return (
+                      <tr key={t.id} className="bg-white">
+                        <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(index + 1)}
+                        </td>
+                        <td
+                          className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
+                            completed ? 'text-emerald-950' : 'text-[#102347]'
+                          }`}
+                        >
+                          <div className="text-center">{toArabicNumerals(t.subject)}</div>
+                          {t.sourceMinuteLabel && (
+                            <div className="text-[10px] text-slate-500 mt-1 text-center">
+                              {`مرحّل من: ${toArabicNumerals(t.sourceMinuteLabel)}`}
+                            </div>
+                          )}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(t.recommendationOrAction) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(t.followUpPerson) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(t.followUpDate) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
+                          {renderTopicStatusCell(t.topicStatus)}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 
@@ -452,72 +460,74 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
             <FileText className="w-4 h-4 text-[#102347] shrink-0" />
             <span>خامساً: المواضيع الجديدة</span>
           </h2>
-          <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
-            <thead>
-              <tr className="bg-[#DCE6F2] text-[#102347]">
-                <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
-                  م
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
-                  الموضوع
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                  التوصيات
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
-                  مسؤولية التنفيذ
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                  تاريخ التنفيذ
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                  الحالة
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {newTopics.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
-                  >
-                    لا توجد مواضيع جديدة مسجلة في هذا القسم
-                  </td>
+          <div className="meeting-preview-table-scroll">
+            <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-topics w-full border-collapse border border-[#9FB2CC] text-xs">
+              <thead>
+                <tr className="bg-[#DCE6F2] text-[#102347]">
+                  <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
+                    م
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
+                    الموضوع
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                    التوصيات
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
+                    مسؤولية التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    تاريخ التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    الحالة
+                  </th>
                 </tr>
-              ) : (
-                newTopics.map((n, index) => {
-                  const completed = isCompletedTopicStatus(n.status);
-                  return (
-                    <tr key={n.id} className="bg-white">
-                      <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                        {toArabicNumerals(index + 1)}
-                      </td>
-                      <td
-                        className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
-                          completed ? 'text-emerald-950' : 'text-[#102347]'
-                        }`}
-                      >
-                        {toArabicNumerals(n.subject)}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(n.recommendationsAndDecisions) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(n.responsiblePerson) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                        {toArabicNumerals(n.executionDate) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
-                        {renderTopicStatusCell(n.status)}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {newTopics.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                    >
+                      لا توجد مواضيع جديدة مسجلة في هذا القسم
+                    </td>
+                  </tr>
+                ) : (
+                  newTopics.map((n, index) => {
+                    const completed = isCompletedTopicStatus(n.status);
+                    return (
+                      <tr key={n.id} className="bg-white">
+                        <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(index + 1)}
+                        </td>
+                        <td
+                          className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
+                            completed ? 'text-emerald-950' : 'text-[#102347]'
+                          }`}
+                        >
+                          {toArabicNumerals(n.subject)}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(n.recommendationsAndDecisions) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(n.responsiblePerson) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(n.executionDate) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
+                          {renderTopicStatusCell(n.status)}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 
@@ -533,72 +543,74 @@ export const OfficialMinutePrintView: React.FC<OfficialMinutePrintViewProps> = (
             <FileText className="w-4 h-4 text-[#102347] shrink-0" />
             <span>{toArabicNumerals(ct.title)}</span>
           </h2>
-          <table className="saaed-minute-document-table w-full border-collapse border border-[#9FB2CC] text-xs">
-            <thead>
-              <tr className="bg-[#DCE6F2] text-[#102347]">
-                <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
-                  م
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
-                  الموضوع
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
-                  التوصيات
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
-                  مسؤولية التنفيذ
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                  تاريخ التنفيذ
-                </th>
-                <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
-                  الحالة
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {ct.rows.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
-                  >
-                    لا توجد بنود مسجلة في هذا الجدول
-                  </td>
+          <div className="meeting-preview-table-scroll">
+            <table className="saaed-minute-document-table meeting-preview-table meeting-preview-table-topics w-full border-collapse border border-[#9FB2CC] text-xs">
+              <thead>
+                <tr className="bg-[#DCE6F2] text-[#102347]">
+                  <th className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-10">
+                    م
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-1/4">
+                    الموضوع
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold">
+                    التوصيات
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-32">
+                    مسؤولية التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    تاريخ التنفيذ
+                  </th>
+                  <th className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold w-24">
+                    الحالة
+                  </th>
                 </tr>
-              ) : (
-                ct.rows.map((row, index) => {
-                  const completed = isCompletedTopicStatus(row.status);
-                  return (
-                    <tr key={row.id} className="bg-white">
-                      <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                        {toArabicNumerals(index + 1)}
-                      </td>
-                      <td
-                        className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
-                          completed ? 'text-emerald-950' : 'text-[#102347]'
-                        }`}
-                      >
-                        {toArabicNumerals(row.subject)}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(row.recommendations) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
-                        {toArabicNumerals(row.responsiblePerson) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
-                        {toArabicNumerals(row.executionDate) || '-'}
-                      </td>
-                      <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
-                        {renderTopicStatusCell(row.status)}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {ct.rows.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="border border-[#B8C7DC] px-3 py-4 text-center align-middle whitespace-normal break-words leading-relaxed text-slate-500"
+                    >
+                      لا توجد بنود مسجلة في هذا الجدول
+                    </td>
+                  </tr>
+                ) : (
+                  ct.rows.map((row, index) => {
+                    const completed = isCompletedTopicStatus(row.status);
+                    return (
+                      <tr key={row.id} className="bg-white">
+                        <td className="border border-[#B8C7DC] px-2.5 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(index + 1)}
+                        </td>
+                        <td
+                          className={`border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-bold ${
+                            completed ? 'text-emerald-950' : 'text-[#102347]'
+                          }`}
+                        >
+                          {toArabicNumerals(row.subject)}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(row.recommendations) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed">
+                          {toArabicNumerals(row.responsiblePerson) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-mono-num">
+                          {toArabicNumerals(row.executionDate) || '-'}
+                        </td>
+                        <td className="border border-[#B8C7DC] px-3 py-2 text-center align-middle whitespace-normal break-words leading-relaxed font-semibold">
+                          {renderTopicStatusCell(row.status)}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
       ))}
 
